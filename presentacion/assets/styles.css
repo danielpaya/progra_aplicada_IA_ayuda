@@ -1,5 +1,5 @@
 /* =====================================================================
-   Alimenta Familia · Propuesta a la Junta
+   Caso Claude · Enlaces compartidos en buscadores · Propuesta académica
    Sistema de diseño: collage editorial (risografía) + tablero de datos
    ===================================================================== */
 /* Fuentes incluidas en la carpeta (funcionan sin internet) · licencia OFL */
@@ -179,6 +179,7 @@ body.night .ico{filter:drop-shadow(5px 5px 0 #000)}
 .foot{position:absolute;left:72px;right:28px;bottom:18px;z-index:40;display:flex;justify-content:space-between;align-items:center;font:600 13px var(--sans);color:var(--ink-2);letter-spacing:.04em}
 .slide.t-ink .foot,.slide.t-red .foot,.slide.t-green .foot,.slide.t-blue .foot{color:rgba(255,255,255,.75)}
 .foot .sim{border:2px solid currentColor;padding:3px 9px;border-radius:99px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:11px;transform:rotate(-2deg)}
+.foot .sim.real{border-style:dashed}
 
 /* ---------- separador de sección (cortina de papel) ---------- */
 .divider{padding:0;justify-content:center}

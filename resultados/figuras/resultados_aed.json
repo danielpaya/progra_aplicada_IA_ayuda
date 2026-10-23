@@ -1,274 +1,453 @@
 {
  "preguntas": {
-  "P1": "¿Los reportes de salud se concentran en un lote o se distribuyen en el portafolio?",
-  "P2": "¿Qué controles de calidad se omitieron y en qué planta/turno ocurre con más frecuencia?",
-  "P3": "¿Existe evidencia de laboratorio para los reportes que mencionan otros lotes?",
-  "P4": "¿Cómo cambiaron el volumen, el tiempo de respuesta y el sentimiento de las PQR tras la crisis?",
-  "P5": "¿La desconfianza se extendió a productos y líneas no afectados técnicamente?"
+  "P1": "¿Qué explica que un enlace compartido llegue a un buscador: el tipo de contenido o dónde se publicó?",
+  "P2": "¿Cuántos enlaces indexados exponían datos sensibles y de qué tipo?",
+  "P3": "¿Cuánto tiempo estuvieron visibles y cuántos siguen activos hoy?",
+  "P4": "¿Cómo cambiaron el volumen, el tiempo de respuesta y el sentimiento de las menciones tras el 25-jul-2026?",
+  "P5": "¿La preocupación se extendió a usuarios que no tenían ningún enlace expuesto?"
  },
  "bruto": {
-  "pqr": 1025,
-  "lotes": 216,
-  "controles": 1307
+  "enlaces": 2430,
+  "menciones": 1428,
+  "meses_kpi": 24
  },
- "nulos_pqr": {
-  "id_pqr": 0,
-  "fecha": 0,
-  "canal": 9,
-  "ciudad": 12,
-  "producto": 0,
-  "linea": 0,
-  "lote": 412,
+ "nulos_enlaces": {
+  "id_enlace": 0,
   "tipo": 0,
-  "severidad": 0,
-  "descripcion": 0,
-  "estado": 0,
-  "tiempo_respuesta_h": 0,
-  "sentimiento": 0
+  "fecha_creacion": 0,
+  "plan": 16,
+  "pais": 12,
+  "publicado_en": 0,
+  "tema": 0,
+  "dato_sensible": 0,
+  "nivel_sensibilidad": 0,
+  "indexado": 0,
+  "buscador": 2274,
+  "fecha_aparicion": 2274,
+  "fecha_retiro": 2274,
+  "horas_visible": 2274,
+  "desactivado_por_usuario": 0,
+  "fecha_desactivacion": 2102
  },
- "iqr_tiempo": {
-  "q1": 18.6,
-  "q3": 65.7,
-  "limite": 136.4,
-  "n_atipicos": 20
+ "nulos_menciones": {
+  "id_mencion": 0,
+  "fecha": 0,
+  "canal": 10,
+  "tipo": 0,
+  "plan": 0,
+  "pais": 0,
+  "sentimiento": 0,
+  "tiempo_respuesta_h": 991,
+  "relacion_con_enlaces": 0,
+  "estado": 0
  },
  "limpieza": [
   {
-   "base": "PQR",
+   "base": "Enlaces",
    "hallazgo": "Duplicados exactos",
-   "n": 25,
+   "n": 30,
    "tratamiento": "Se eliminan"
   },
   {
-   "base": "PQR",
-   "hallazgo": "Fechas imposibles o fuera de periodo",
-   "n": 6,
-   "tratamiento": "Se excluyen del análisis temporal"
-  },
-  {
-   "base": "PQR",
-   "hallazgo": "Tiempo de respuesta negativo",
+   "base": "Enlaces",
+   "hallazgo": "Etiquetas inconsistentes en 'indexado'",
    "n": 7,
-   "tratamiento": "Se toma valor absoluto (error de signo)"
+   "tratamiento": "Se normalizan a Sí / No"
   },
   {
-   "base": "PQR",
-   "hallazgo": "Severidad fuera de escala 1-5",
-   "n": 5,
-   "tratamiento": "Se marca como nula"
+   "base": "Enlaces",
+   "hallazgo": "Fecha de creación imposible",
+   "n": 8,
+   "tratamiento": "Se excluyen del análisis temporal; el enlace se conserva"
   },
   {
-   "base": "PQR",
-   "hallazgo": "Lote 'N/D' (vacío disfrazado)",
-   "n": 10,
-   "tratamiento": "Se convierte a nulo"
+   "base": "Enlaces",
+   "hallazgo": "Horas visibles negativas",
+   "n": 9,
+   "tratamiento": "Se toma el valor absoluto (error de signo)"
   },
   {
-   "base": "PQR",
-   "hallazgo": "Ciudad o canal vacíos",
-   "n": 20,
+   "base": "Enlaces",
+   "hallazgo": "Plan o país vacíos",
+   "n": 27,
    "tratamiento": "Se conservan como 'Sin dato'"
   },
   {
-   "base": "Controles",
+   "base": "Menciones",
    "hallazgo": "Duplicados exactos",
-   "n": 11,
+   "n": 20,
    "tratamiento": "Se eliminan"
   },
   {
-   "base": "Controles",
-   "hallazgo": "Resultado vacío",
+   "base": "Menciones",
+   "hallazgo": "Fechas imposibles o fuera de periodo",
    "n": 9,
-   "tratamiento": "Se marca 'Sin registro' (no se asume conforme)"
+   "tratamiento": "Se excluyen"
   },
   {
-   "base": "Controles",
-   "hallazgo": "Fecha de control anterior a la producción",
+   "base": "Menciones",
+   "hallazgo": "Tiempo de respuesta negativo",
+   "n": 6,
+   "tratamiento": "Se toma el valor absoluto"
+  },
+  {
+   "base": "Menciones",
+   "hallazgo": "Sentimiento fuera de la escala -1 a 1",
    "n": 5,
-   "tratamiento": "Se marca para verificación con Calidad"
+   "tratamiento": "Se marca como nulo"
   },
   {
-   "base": "Controles",
-   "hallazgo": "Valor medido fuera de rango",
-   "n": 4,
-   "tratamiento": "Se anula el valor; se conserva el resultado"
+   "base": "Menciones",
+   "hallazgo": "Relación con enlaces 'N/D' (vacío disfrazado)",
+   "n": 8,
+   "tratamiento": "Se marca 'Sin dato'"
+  },
+  {
+   "base": "Menciones",
+   "hallazgo": "Canal vacío",
+   "n": 10,
+   "tratamiento": "Se conserva como 'Sin dato'"
   }
  ],
  "limpio": {
-  "pqr": 994,
-  "controles": 1296
+  "enlaces": 2400,
+  "menciones": 1399
  },
- "salud_total": 102,
- "salud_lote047": 64,
- "salud_otros_lotes": 24,
- "salud_sin_lote": 14,
- "top_lotes_salud": {
-  "VEG-BP-2026-047": 64,
-  "VEG-BP-2026-046": 4,
-  "VEG-BP-2026-048": 4,
-  "VEG-BP-2026-049": 4,
-  "VEG-GA-2026-062": 2,
-  "VEG-GA-2026-063": 2,
-  "VEG-HA-2026-019": 2,
-  "VEG-HA-2026-021": 2
+ "iqr_tiempo": {
+  "q1": 19.1,
+  "q3": 65.7,
+  "limite": 135.6,
+  "n_atipicos": 5,
+  "pct_atipicos_en_crisis": 100.0
  },
- "otros_lotes_mencionados": 11,
- "otros_lotes_no_conformes": 0,
- "omision_planta_turno_pre": {
-  "Planta Chía · Mañana": 1.4,
-  "Planta Chía · Noche": 15.2,
-  "Planta Chía · Tarde": 0.0,
-  "Planta Funza · Mañana": 2.8,
-  "Planta Funza · Noche": 1.3,
-  "Planta Funza · Tarde": 5.6,
-  "Planta Rionegro · Mañana": 1.5,
-  "Planta Rionegro · Noche": 2.6,
-  "Planta Rionegro · Tarde": 1.2
+ "indexados": 154,
+ "pct_indexados": 6.4,
+ "pct_indexado_publicacion_tipo": {
+  "Blog o sitio web · Artefacto": 60.0,
+  "Blog o sitio web · Conversación": 39.1,
+  "Foro o Discord público · Artefacto": 26.7,
+  "Foro o Discord público · Conversación": 30.0,
+  "Reddit · Artefacto": 37.9,
+  "Reddit · Conversación": 36.5,
+  "Repositorio GitHub · Artefacto": 17.6,
+  "Repositorio GitHub · Conversación": 23.1,
+  "Solo mensajería privada · Artefacto": 0.7,
+  "Solo mensajería privada · Conversación": 0.5,
+  "X (Twitter) · Artefacto": 12.1,
+  "X (Twitter) · Conversación": 14.0
  },
- "omision_post": 0.0,
- "ficha_047": [
-  {
-   "control": "Humedad / pH",
-   "valor_medido": 3.98,
-   "resultado": "Conforme"
-  },
-  {
-   "control": "Bacillus cereus",
-   "valor_medido": NaN,
-   "resultado": "No realizado"
-  },
-  {
-   "control": "Salmonella spp.",
-   "valor_medido": 0.0,
-   "resultado": "Conforme"
-  },
-  {
-   "control": "Composición declarada (proteína)",
-   "valor_medido": 14.2,
-   "resultado": "No conforme"
-  },
-  {
-   "control": "Alérgenos (trazas leche/huevo)",
-   "valor_medido": NaN,
-   "resultado": "No realizado"
-  },
-  {
-   "control": "Etiquetado",
-   "valor_medido": NaN,
-   "resultado": "Conforme"
-  }
- ],
- "lotes_046_048": {
-  "VEG-BP-2026-046": {
-   "Conforme": 6
-  },
-  "VEG-BP-2026-048": {
-   "Conforme": 6
-  }
+ "n_publicacion_tipo": {
+  "Blog o sitio web · Artefacto": 25,
+  "Blog o sitio web · Conversación": 69,
+  "Foro o Discord público · Artefacto": 30,
+  "Foro o Discord público · Conversación": 60,
+  "Reddit · Artefacto": 29,
+  "Reddit · Conversación": 85,
+  "Repositorio GitHub · Artefacto": 17,
+  "Repositorio GitHub · Conversación": 65,
+  "Solo mensajería privada · Artefacto": 587,
+  "Solo mensajería privada · Conversación": 1314,
+  "X (Twitter) · Artefacto": 33,
+  "X (Twitter) · Conversación": 86
+ },
+ "indexados_por_publicacion": {
+  "Blog o sitio web": 42,
+  "Reddit": 42,
+  "Foro o Discord público": 26,
+  "Repositorio GitHub": 18,
+  "X (Twitter)": 16,
+  "Solo mensajería privada": 10
+ },
+ "indexados_publicados_por_usuario_pct": 93.5,
+ "indexados_sin_publicacion_publica": 10,
+ "pct_indexado_por_tipo": {
+  "Artefacto": 6.2,
+  "Conversación": 6.5
+ },
+ "indexados_con_sensibles": 56,
+ "pct_indexados_con_sensibles": 36.4,
+ "sensibles_por_tipo": {
+  "Datos personales de contacto": 20,
+  "Documentos internos de empresa": 18,
+  "Credenciales, llaves o cripto": 11,
+  "Datos de salud": 7
+ },
+ "sensibles_nivel_alto": 18,
+ "dias_visibles_mediana": 100.6,
+ "dias_visibles_mediana_episodio2": 149.2,
+ "indexados_episodio1": 43,
+ "indexados_episodio2": 111,
+ "indexados_activos_hoy": 92,
+ "pct_indexados_activos_hoy": 59.7,
+ "indexados_por_buscador": {
+  "Google": 81,
+  "Bing": 39,
+  "Google y Bing": 20,
+  "Brave": 14
  },
  "periodos": [
   {
    "periodo": "Antes",
-   "pqr": 226,
-   "t_resp_mediana_h": 25.0,
-   "sentimiento_medio": -0.1,
-   "pqr_por_dia": 2.22
+   "menciones": 274,
+   "t_resp_mediana_h": 19.75,
+   "sentimiento_medio": -0.04,
+   "por_dia": 5.07
   },
   {
-   "periodo": "Crisis (60 días)",
-   "pqr": 511,
-   "t_resp_mediana_h": 64.1,
-   "sentimiento_medio": -0.69,
-   "pqr_por_dia": 8.52
+   "periodo": "Crisis (30 días)",
+   "menciones": 905,
+   "t_resp_mediana_h": 56.3,
+   "sentimiento_medio": -0.53,
+   "por_dia": 29.19
   },
   {
    "periodo": "Después",
-   "pqr": 257,
-   "t_resp_mediana_h": 14.9,
-   "sentimiento_medio": -0.28,
-   "pqr_por_dia": 2.34
+   "menciones": 220,
+   "t_resp_mediana_h": 11.2,
+   "sentimiento_medio": -0.23,
+   "por_dia": 5.95
   }
  ],
- "contagio_por_linea": {
-  "Cereales": 80,
-  "Lácteos": 49,
-  "Panadería": 35,
-  "Vegana": 209
+ "semanal": [
+  {
+   "w": "2026-06-01",
+   "total": 44,
+   "priv": 8
+  },
+  {
+   "w": "2026-06-08",
+   "total": 45,
+   "priv": 13
+  },
+  {
+   "w": "2026-06-15",
+   "total": 32,
+   "priv": 8
+  },
+  {
+   "w": "2026-06-22",
+   "total": 38,
+   "priv": 11
+  },
+  {
+   "w": "2026-06-29",
+   "total": 32,
+   "priv": 11
+  },
+  {
+   "w": "2026-07-06",
+   "total": 32,
+   "priv": 7
+  },
+  {
+   "w": "2026-07-13",
+   "total": 24,
+   "priv": 7
+  },
+  {
+   "w": "2026-07-20",
+   "total": 241,
+   "priv": 162
+  },
+  {
+   "w": "2026-07-27",
+   "total": 404,
+   "priv": 255
+  },
+  {
+   "w": "2026-08-03",
+   "total": 166,
+   "priv": 86
+  },
+  {
+   "w": "2026-08-10",
+   "total": 72,
+   "priv": 35
+  },
+  {
+   "w": "2026-08-17",
+   "total": 45,
+   "priv": 17
+  },
+  {
+   "w": "2026-08-24",
+   "total": 47,
+   "priv": 22
+  },
+  {
+   "w": "2026-08-31",
+   "total": 39,
+   "priv": 17
+  },
+  {
+   "w": "2026-09-07",
+   "total": 33,
+   "priv": 16
+  },
+  {
+   "w": "2026-09-14",
+   "total": 48,
+   "priv": 14
+  },
+  {
+   "w": "2026-09-21",
+   "total": 38,
+   "priv": 15
+  },
+  {
+   "w": "2026-09-28",
+   "total": 19,
+   "priv": 11
+  }
+ ],
+ "promedio_semanal_previo": 35.3,
+ "pico_semanal": 404,
+ "semana_pico": "2026-07-27",
+ "multiplicador_pico": 11.4,
+ "contagio": {
+  "Nunca compartió": 289,
+  "Compartió, sin indexar": 181,
+  "Tenía un enlace indexado": 131
  },
- "semanal_pqr": {
-  "2026-01-05": 5,
-  "2026-01-12": 15,
-  "2026-01-19": 13,
-  "2026-01-26": 24,
-  "2026-02-02": 16,
-  "2026-02-09": 12,
-  "2026-02-16": 16,
-  "2026-02-23": 16,
-  "2026-03-02": 13,
-  "2026-03-09": 18,
-  "2026-03-16": 10,
-  "2026-03-23": 18,
-  "2026-03-30": 22,
-  "2026-04-06": 15,
-  "2026-04-13": 13,
-  "2026-04-20": 173,
-  "2026-04-27": 112,
-  "2026-05-04": 77,
-  "2026-05-11": 45,
-  "2026-05-18": 43,
-  "2026-05-25": 13,
-  "2026-06-01": 29,
-  "2026-06-08": 14,
-  "2026-06-15": 14,
-  "2026-06-22": 14,
-  "2026-06-29": 15,
-  "2026-07-06": 17,
-  "2026-07-13": 19,
-  "2026-07-20": 14,
-  "2026-07-27": 16,
-  "2026-08-03": 20,
-  "2026-08-10": 18,
-  "2026-08-17": 15,
-  "2026-08-24": 19,
-  "2026-08-31": 18,
-  "2026-09-07": 11,
-  "2026-09-14": 21,
-  "2026-09-21": 15,
-  "2026-09-28": 12,
-  "2026-10-05": 4
- },
- "semanal_salud": {
-  "2026-02-16": 2,
-  "2026-02-23": 1,
-  "2026-03-02": 0,
-  "2026-03-09": 0,
-  "2026-03-16": 1,
-  "2026-03-23": 0,
-  "2026-03-30": 0,
-  "2026-04-06": 0,
-  "2026-04-13": 1,
-  "2026-04-20": 46,
-  "2026-04-27": 17,
-  "2026-05-04": 14,
-  "2026-05-11": 6,
-  "2026-05-18": 5,
-  "2026-05-25": 1,
-  "2026-06-01": 0,
-  "2026-06-08": 0,
-  "2026-06-15": 0,
-  "2026-06-22": 0,
-  "2026-06-29": 0,
-  "2026-07-06": 0,
-  "2026-07-13": 0,
-  "2026-07-20": 0,
-  "2026-07-27": 1,
-  "2026-08-03": 1,
-  "2026-08-10": 2,
-  "2026-08-17": 2,
-  "2026-08-24": 0,
-  "2026-08-31": 1,
-  "2026-09-07": 0,
-  "2026-09-14": 0,
-  "2026-09-21": 1
+ "pct_sin_enlace_expuesto": 78.2,
+ "pct_nunca_compartio": 48.1,
+ "tablero": [
+  {
+   "mes": "2025-04",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2025-05",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 6
+  },
+  {
+   "mes": "2025-06",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 19
+  },
+  {
+   "mes": "2025-07",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 29
+  },
+  {
+   "mes": "2025-08",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 37
+  },
+  {
+   "mes": "2025-09",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 46
+  },
+  {
+   "mes": "2025-10",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 16
+  },
+  {
+   "mes": "2025-11",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 26
+  },
+  {
+   "mes": "2025-12",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 31
+  },
+  {
+   "mes": "2026-01",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 50
+  },
+  {
+   "mes": "2026-02",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 56
+  },
+  {
+   "mes": "2026-03",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 67
+  },
+  {
+   "mes": "2026-04",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 76
+  },
+  {
+   "mes": "2026-05",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 90
+  },
+  {
+   "mes": "2026-06",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 100
+  },
+  {
+   "mes": "2026-07",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 111
+  },
+  {
+   "mes": "2026-08",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 14
+  },
+  {
+   "mes": "2026-09",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2026-10",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2026-11",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2026-12",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2027-01",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2027-02",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  },
+  {
+   "mes": "2027-03",
+   "pct_paginas_bloqueadas_robots": 100,
+   "enlaces_muestra_visibles_en_buscadores": 0
+  }
+ ],
+ "ficha": {
+  "confirmado": [
+   "Chats y artefactos compartidos aparecieron en Google y Bing (jul-2026)",
+   "Solo se expuso contenido que alguien había compartido; no hubo acceso a cuentas",
+   "robots.txt bloqueaba /share, pero eso no impide indexar una URL enlazada",
+   "Los resultados se retiraron entre el 26 y el 28 de julio",
+   "Ya había pasado en septiembre de 2025 (cerca de 600 conversaciones)"
+  ],
+  "por_confirmar": [
+   "Cuántos enlaces quedaron copiados en archivos de terceros"
+  ],
+  "no_consta": [
+   "Que alguien haya usado las credenciales expuestas",
+   "Que sea culpa de los usuarios",
+   "Que ningún dato sensible haya quedado público"
+  ]
  }
 }

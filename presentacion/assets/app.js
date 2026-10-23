@@ -1,5 +1,5 @@
 /* =====================================================================
-   Alimenta Familia · Propuesta a la Junta
+   Caso Claude · Enlaces compartidos en buscadores · Propuesta académica
    Motor de la presentación: navegación con pasos (builds), anexo opcional,
    contadores, gráficos animados y efectos de collage. Sin dependencias.
    ===================================================================== */
@@ -33,7 +33,8 @@
       const w = document.createElement('div'); w.className = 'who'; w.style.setProperty('--c', COLOR[who]); w.textContent = who; s.appendChild(w);
     }
     const f = document.createElement('div'); f.className = 'foot';
-    f.innerHTML = `<span>Alimenta Familia · Propuesta a la Junta Directiva</span><span style="display:flex;gap:14px;align-items:center"><span class="sim">dato simulado</span><span class="pg"></span></span>`;
+    const src = { real: 'hecho público', mixto: 'hechos públicos + datos simulados', propuesta: 'propuesta del equipo' }[s.dataset.src] || 'dato simulado';
+    f.innerHTML = `<span>Caso Claude · Propuesta académica · no afiliada a Anthropic</span><span style="display:flex;gap:14px;align-items:center"><span class="sim${s.dataset.src === 'real' ? ' real' : ''}">${src}</span><span class="pg"></span></span>`;
     s.appendChild(f);
     if (s.dataset.steps) { s.classList.add('has-steps'); const h = document.createElement('div'); h.className = 'build-hint'; h.textContent = `→ ${s.dataset.steps} PASOS`; s.appendChild(h); }
     s.querySelectorAll('[data-d]').forEach(n => n.style.setProperty('--d', `${n.dataset.d}ms`));
@@ -67,10 +68,11 @@
 
   // ---------- tiendas (4 de 10 se van) ----------
   document.querySelectorAll('[data-stores]').forEach(box => {
+    const G = (box.dataset.gone || '1,4,6,8').split(',').map(Number);
     for (let i = 0; i < 10; i++) {
-      const gone = [1, 4, 6, 8].includes(i), d = 1100 + [1, 4, 6, 8].indexOf(i) * 220;
+      const gone = G.includes(i), d = 1100 + G.indexOf(i) * 220;
       const st = document.createElement('div'); st.className = 'st' + (gone ? ' gone' : ''); st.style.setProperty('--i', i);
-      st.innerHTML = `<svg class="store ico" viewBox="-6 -6 112 112"><use href="#i-store"/></svg>` +
+      st.innerHTML = `<svg class="store ico" viewBox="-6 -6 112 112"><use href="#${box.dataset.icon || 'i-store'}"/></svg>` +
         (gone ? `<svg class="x" viewBox="0 0 100 100"><path d="M14 14 L86 86" pathLength="1" data-a="draw" style="--d:${d}ms"/><path d="M86 14 L14 86" pathLength="1" data-a="draw" style="--d:${d + 120}ms"/></svg>` : '');
       box.appendChild(st);
     }
@@ -95,13 +97,13 @@
   // ---------- barras de avance frente a la meta ----------
   document.querySelectorAll('[data-progress]').forEach(box => {
     const items = [
-      { f: 'tiempo_rastreo_lote_h', n: 'Rastrear un lote', u: 'h', goal: 4, down: true },
-      { f: 'tiempo_respuesta_pqr_h', n: 'Responder a una familia', u: 'h', goal: 12, down: true },
+      { f: 'tiempo_respuesta_soporte_h', n: 'Responder a un usuario', u: 'h', goal: 12, down: true },
       { f: 'pct_mensajes_auditados', n: 'Mensajes auditados', u: '%', goal: 100, down: false },
-      { f: 'nps', n: 'NPS', u: '', goal: 40, down: false },
+      { f: 'tiempo_desindexacion_h', n: 'Sacar un enlace de los buscadores', u: 'h', goal: 4, down: true },
+      { f: 'nps', n: 'NPS', u: '', goal: 30, down: false },
     ];
     items.forEach((it, i) => {
-      const vals = K.filter(r => r.mes >= '2026-04' && r.mes <= '2026-09').map(r => r[it.f]);
+      const vals = K.filter(r => r.mes >= '2026-07' && r.mes <= '2026-09').map(r => r[it.f]);
       const worst = it.down ? Math.max(...vals) : Math.min(...vals), now = row('2026-09')[it.f];
       const p = Math.max(0.03, Math.min(1, (it.down ? worst - now : now - worst) / Math.abs(it.down ? worst - it.goal : it.goal - worst)));
       const ok = it.down ? now <= it.goal * 1.5 : now >= it.goal;
@@ -112,15 +114,15 @@
   // ---------- gráficos SVG ----------
   const charts = {
     caida(svg) {
-      const [w, h] = size(svg), R = K.filter(r => r.mes >= '2025-12' && r.mes <= '2026-05');
+      const [w, h] = size(svg), R = K.filter(r => r.mes >= '2026-02' && r.mes <= '2026-08');
       const x = i => 20 + i / (R.length - 1) * (w - 40), y = v => 20 + (1 - (v - 30) / 55) * (h - 40);
-      const d = R.map((r, i) => `${i ? 'L' : 'M'}${x(i)} ${y(r.indice_confianza_0_100)}`).join('');
+      const d = R.map((r, i) => `${i ? 'L' : 'M'}${x(i)} ${y(r.indice_confianza_privacidad_0_100)}`).join('');
       add(svg, 'path', { d, fill: 'none', 'stroke-width': 9, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1, style: 'stroke:var(--red);--d:500ms', 'data-a': 'draw' });
-      R.forEach((r, i) => { const c = add(svg, 'circle', { cx: x(i), cy: y(r.indice_confianza_0_100), r: 9, style: `fill:var(--paper);stroke:var(--ink);stroke-width:4` }); anim(c, 'pop', 450 + i * 160); });
+      R.forEach((r, i) => { const c = add(svg, 'circle', { cx: x(i), cy: y(r.indice_confianza_privacidad_0_100), r: 9, style: `fill:var(--paper);stroke:var(--ink);stroke-width:4` }); anim(c, 'pop', 450 + i * 160); });
     },
 
     escalera(svg) {
-      const [w, h] = size(svg), L = ['Lote', 'Producto', 'Línea vegana', 'Marca', 'Organización'], gap = 18, bw = (w - gap * 4) / 5;
+      const [w, h] = size(svg), L = ['Enlace', 'Conversación', 'Función Compartir', 'Claude', 'Anthropic'], gap = 18, bw = (w - gap * 4) / 5;
       L.forEach((l, i) => {
         const bh = (h - 20) * (0.2 + i * 0.2), x = i * (bw + gap);
         const r = add(svg, 'rect', { x, y: h - bh, width: bw, height: bh, style: `fill:url(#htR);stroke:#151311;stroke-width:4` }); anim(r, 'grow', 300 + i * 260);
@@ -130,31 +132,31 @@
     },
 
     gauge(svg) {
-      const [w, h] = size(svg), v = 96.8, meta = 95, cx = w / 2, cy = h * .78, r = Math.min(w / 2 - 30, h * .66);
+      const [w, h] = size(svg), v = 100, meta = 100, cx = w / 2, cy = h * .78, r = Math.min(w / 2 - 30, h * .66);
       const pt = (p, rr) => [cx + rr * Math.cos(Math.PI * (1 - p / 100)), cy - rr * Math.sin(Math.PI * (1 - p / 100))];
       const arc = (p0, p1, rr) => { const [x0, y0] = pt(p0, rr), [x1, y1] = pt(p1, rr); return `M${x0} ${y0}A${rr} ${rr} 0 0 1 ${x1} ${y1}`; };
       add(svg, 'path', { d: arc(0, 100, r), fill: 'none', 'stroke-width': 46, style: 'stroke:var(--paper-2)' });
-      const a = add(svg, 'path', { d: arc(0, v, r), fill: 'none', 'stroke-width': 46, pathLength: 1, style: 'stroke:url(#htG);stroke:var(--green)' }); anim(a, 'draw', 300);
-      const [mx1, my1] = pt(meta, r - 34), [mx2, my2] = pt(meta, r + 34);
+      const a = add(svg, 'path', { d: arc(0, v, r), fill: 'none', 'stroke-width': 46, pathLength: 1, style: 'stroke:var(--green)' }); anim(a, 'draw', 300);
+      const [mx1, my1] = pt(meta - .01, r - 34), [mx2, my2] = pt(meta - .01, r + 34);
       add(svg, 'line', { x1: mx1, y1: my1, x2: mx2, y2: my2, 'stroke-width': 5, style: 'stroke:var(--ink)' });
-      txt(svg, mx2 + 6, my2 - 14, 'META 95 %', { a: 'middle', size: 17, w: 800 });
-      const t = txt(svg, cx, cy - 34, '96,8 %', { a: 'middle', size: 88, w: 400, fill: 'var(--green)', font: 'var(--display)' }); anim(t, 'pop', 900);
+      txt(svg, mx2 - 10, my2 + 34, 'META 100 %', { a: 'end', size: 17, w: 800 });
+      const t = txt(svg, cx, cy - 34, '100 %', { a: 'middle', size: 88, w: 400, fill: 'var(--green)', font: 'var(--display)' }); anim(t, 'pop', 900);
       const s = txt(svg, cx, cy + 8, '✓ CUMPLE LA META', { a: 'middle', size: 22, w: 800, fill: 'var(--green)' }); anim(s, 'up', 1300);
     },
 
     heat(svg) {
-      const [w, h] = size(svg), P = ['Chía', 'Funza', 'Rionegro'], T = ['Mañana', 'Tarde', 'Noche'];
-      const x0 = 150, y0 = 40, cw = (w - x0) / 3, ch = (h - y0) / 3, mx = Math.max(...D.omision.map(r => r.pct));
-      T.forEach((t, j) => txt(svg, x0 + j * cw + cw / 2, 24, t.toUpperCase(), { a: 'middle', size: 18, w: 800, fill: 'var(--ink-2)' }));
-      P.forEach((p, i) => {
-        txt(svg, x0 - 18, y0 + i * ch + ch / 2 + 9, p, { a: 'end', size: 28, w: 800 });
-        T.forEach((t, j) => {
-          const r = D.omision.find(o => o.planta === p && o.turno === t), hot = r.pct === mx, k = i * 3 + j;
-          const g = add(svg, 'g', {});
-          g.appendChild(el('rect', { x: x0 + j * cw + 5, y: y0 + i * ch + 5, width: cw - 10, height: ch - 10, style: hot ? 'fill:var(--red);stroke:#151311;stroke-width:5' : `fill:url(#htR);opacity:${0.25 + r.pct / 6 * 0.6};stroke:#151311;stroke-width:2` }));
-          g.appendChild(el('text', { x: x0 + j * cw + cw / 2, y: y0 + i * ch + ch / 2 + (hot ? 12 : 12), 'text-anchor': 'middle', 'font-size': hot ? 74 : 32, style: `font-family:var(--display);fill:${hot ? '#fff' : 'var(--ink)'}` }, `${nf(r.pct, 1)}%`));
-          if (hot) g.appendChild(el('text', { x: x0 + j * cw + cw / 2, y: y0 + i * ch + ch - 20, 'text-anchor': 'middle', 'font-size': 17, 'font-weight': 800, style: 'fill:#fff;letter-spacing:.06em' }, 'AQUÍ SALIÓ EL LOTE 047'));
-          anim(g, 'pop', hot ? 1200 : 250 + k * 70);
+      const [w, h] = size(svg), H = D.heat, x0 = 320, y0 = 40, cw = (w - x0) / H.cols.length, ch = (h - y0) / H.rows.length;
+      const mx = Math.max(...H.pct.flat());
+      H.cols.forEach((c, j) => txt(svg, x0 + j * cw + cw / 2, 24, c.toUpperCase(), { a: 'middle', size: 18, w: 800, fill: 'var(--ink-2)' }));
+      H.rows.forEach((rw, i) => {
+        txt(svg, x0 - 18, y0 + i * ch + ch / 2 + 8, rw, { a: 'end', size: 23, w: 800 });
+        H.cols.forEach((c, j) => {
+          const v = H.pct[i][j], hot = v === mx, k = i * H.cols.length + j, g = add(svg, 'g', {});
+          g.appendChild(el('rect', { x: x0 + j * cw + 5, y: y0 + i * ch + 4, width: cw - 10, height: ch - 8, style: hot ? 'fill:var(--red);stroke:#151311;stroke-width:5' : `fill:url(#htR);opacity:${0.18 + v / mx * 0.75};stroke:#151311;stroke-width:2` }));
+          g.appendChild(el('text', { x: x0 + j * cw + (hot ? 24 : cw / 2), y: y0 + i * ch + ch / 2 + 11, 'text-anchor': hot ? 'start' : 'middle', 'font-size': hot ? 40 : 30, style: `font-family:var(--display);fill:${hot ? '#fff' : 'var(--ink)'}` }, `${nf(v, 1)}%`));
+          if (hot) g.appendChild(el('text', { x: x0 + j * cw + cw - 22, y: y0 + i * ch + ch / 2 + 7, 'text-anchor': 'end', 'font-size': 16, 'font-weight': 800, style: 'fill:#fff;letter-spacing:.06em' }, 'AQUÍ SE FILTRAN MÁS'));
+          g.appendChild(el('title', {}, `${rw} · ${c}: ${nf(v, 1)} % de ${H.n[i][j]} enlaces indexados`));
+          anim(g, 'pop', hot ? 1300 : 250 + k * 60);
         });
       });
     },
@@ -162,33 +164,37 @@
     semanas(svg) {
       const [w, h] = size(svg), R = D.semanas, x0 = 6, bot = h - 28, band = (w - x0) / R.length, bw = band * .72;
       const peak = Math.max(...R.map(r => r.total)), y = v => bot - v / peak * (bot - 20);
-      const pr = R.filter(r => r.w < '2026-04-14'), avg = pr.reduce((s, r) => s + r.total, 0) / pr.length, pi = R.findIndex(r => r.total === peak);
+      const pr = R.filter(r => r.w < '2026-07-19'), avg = pr.reduce((s, r) => s + r.total, 0) / pr.length, pi = R.findIndex(r => r.total === peak);
       R.forEach((r, i) => {
-        const b = add(svg, 'rect', { x: x0 + i * band, y: y(r.total), width: bw, height: bot - y(r.total), style: 'fill:var(--ink)' }); anim(b, 'grow', 200 + i * 25);
-        b.appendChild(el('title', {}, `Semana al ${r.w}: ${r.total} reclamos, ${r.salud} de salud`));
-        if (r.salud) { const s = add(svg, 'rect', { x: x0 + i * band, y: y(r.salud), width: bw, height: bot - y(r.salud), style: 'fill:var(--red)' }); anim(s, 'grow', 400 + i * 25); }
+        const b = add(svg, 'rect', { x: x0 + i * band, y: y(r.total), width: bw, height: bot - y(r.total), style: 'fill:var(--ink)' }); anim(b, 'grow', 200 + i * 40);
+        b.appendChild(el('title', {}, `Semana del ${r.w}: ${r.total} menciones, ${r.priv} de privacidad`));
+        if (r.priv) { const s = add(svg, 'rect', { x: x0 + i * band, y: y(r.priv), width: bw, height: bot - y(r.priv), style: 'fill:var(--red)' }); anim(s, 'grow', 400 + i * 40); }
         if (i === 0 || r.w.slice(5, 7) !== R[i - 1].w.slice(5, 7)) txt(svg, x0 + i * band, bot + 24, mes(r.w), { size: 17, w: 700, fill: 'var(--ink-2)' });
       });
       add(svg, 'line', { x1: x0, x2: w, y1: y(avg), y2: y(avg), 'stroke-width': 3, 'stroke-dasharray': '8 6', style: 'stroke:var(--green)' });
       txt(svg, w, y(avg) - 12, `promedio previo: ${nf(avg, 0)} por semana`, { a: 'end', size: 18, w: 800, fill: 'var(--green)' });
-      const t = txt(svg, x0 + pi * band + bw + 14, y(peak) + 40, '173', { size: 72, w: 400, font: 'var(--display)' }); anim(t, 'pop', 1200);
-      const t2 = txt(svg, x0 + pi * band - 12, y(R[pi].salud) + 10, `${R[pi].salud} de salud`, { a: 'end', size: 22, w: 800, fill: 'var(--red)' }); anim(t2, 'up', 1400);
+      const t = txt(svg, x0 + pi * band + bw + 14, y(peak) + 40, peak, { size: 72, w: 400, font: 'var(--display)' }); anim(t, 'pop', 1200);
+      const t2 = txt(svg, x0 + pi * band + bw + 14, y(peak) + 74, `${R[pi].priv} de privacidad`, { size: 22, w: 800, fill: 'var(--red)' }); anim(t2, 'up', 1400);
     },
 
     donut(svg) {
-      const [w, h] = size(svg), E = Object.entries(D.contagio).sort((a, b) => (a[0] === 'Vegana') - (b[0] === 'Vegana') || b[1] - a[1]);
-      const tot = E.reduce((s, e) => s + e[1], 0), sanas = E.filter(e => e[0] !== 'Vegana').reduce((s, e) => s + e[1], 0);
-      const cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 95;
-      add(svg, 'circle', { cx, cy, r, fill: 'none', 'stroke-width': 60, style: 'stroke:var(--paper-2)' });
-      let acc = 0; const C = { Cereales: 'var(--red)', 'Lácteos': '#B62A12', 'Panadería': '#F07A5E', Vegana: 'var(--ink)' };
+      const [w, h] = size(svg), ORD = ['Nunca compartió', 'Compartió, sin indexar', 'Tenía un enlace indexado'];
+      const E = ORD.filter(k => D.contagio[k]).map(k => [k, D.contagio[k]]);
+      const tot = E.reduce((s, e) => s + e[1], 0), sanos = E.filter(e => e[0] !== 'Tenía un enlace indexado').reduce((s, e) => s + e[1], 0);
+      const lh = 34, legH = E.length * lh + 10, r = Math.min(w, h - legH) / 2 - 38, cx = w / 2, cy = r + 38;
+      add(svg, 'circle', { cx, cy, r, fill: 'none', 'stroke-width': 64, style: 'stroke:var(--paper-2)' });
+      let acc = 0; const C = { 'Nunca compartió': 'var(--red)', 'Compartió, sin indexar': '#F07A5E', 'Tenía un enlace indexado': 'var(--ink)' };
+      const LB = { 'Nunca compartió': 'Nunca compartió nada', 'Compartió, sin indexar': 'Compartió, pero no quedó expuesto', 'Tenía un enlace indexado': 'Tenía un enlace expuesto' };
       E.forEach(([l, n], i) => {
-        const frac = n / tot, c = add(svg, 'circle', { cx, cy, r, fill: 'none', 'stroke-width': 60, pathLength: 1, transform: `rotate(${-90 + acc * 360} ${cx} ${cy})`, style: `stroke:${C[l]};stroke-dasharray:${frac} ${1 - frac};--d:${300 + i * 350}ms`, 'data-a': 'fade' });
+        const frac = n / tot, c = add(svg, 'circle', { cx, cy, r, fill: 'none', 'stroke-width': 64, pathLength: 1, transform: `rotate(${-90 + acc * 360} ${cx} ${cy})`, style: `stroke:${C[l]};stroke-dasharray:${frac} ${1 - frac};--d:${300 + i * 350}ms`, 'data-a': 'fade' });
         c.appendChild(el('title', {}, `${l}: ${n}`));
-        const mid = (acc + frac / 2) * Math.PI * 2 - Math.PI / 2, lx = cx + Math.cos(mid) * (r + 50), ly = cy + Math.sin(mid) * (r + 50);
-        const t = txt(svg, lx, ly + 6, `${l} ${n}`, { a: Math.cos(mid) > 0.2 ? 'start' : Math.cos(mid) < -0.2 ? 'end' : 'middle', size: 18, w: 800, fill: l === 'Vegana' ? 'var(--ink)' : 'var(--red)' }); anim(t, 'up', 500 + i * 350);
+        const ly = h - legH + 10 + i * lh, g = add(svg, 'g', {});
+        g.appendChild(el('rect', { x: cx - 170, y: ly, width: 22, height: 22, style: `fill:${C[l]}` }));
+        g.appendChild(el('text', { x: cx - 138, y: ly + 18, 'font-size': 19, 'font-weight': 800, style: 'fill:var(--ink)' }, `${Math.round(frac * 100)}% · ${LB[l]}`));
+        anim(g, 'up', 500 + i * 350);
         acc += frac;
       });
-      const t = txt(svg, cx, cy + 22, `${Math.round(sanas / tot * 100)}%`, { a: 'middle', size: 84, w: 400, fill: 'var(--red)', font: 'var(--display)' }); anim(t, 'pop', 1700);
+      const t = txt(svg, cx, cy + 26, `${Math.round(sanos / tot * 100)}%`, { a: 'middle', size: 80, w: 400, fill: 'var(--red)', font: 'var(--display)' }); anim(t, 'pop', 1700);
     },
 
     matriz(svg) {
@@ -208,7 +214,7 @@
     },
 
     gantt(svg) {
-      const [w, h] = size(svg), x0 = 360, top = 34, pw = w - x0 - 10, rh = (h - top) / ACC.length, X = d => x0 + d / 90 * pw;
+      const [w, h] = size(svg), x0 = 380, top = 34, pw = w - x0 - 10, rh = (h - top) / ACC.length, X = d => x0 + d / 90 * pw;
       [0, 30, 60, 90].forEach(d => { add(svg, 'line', { x1: X(d), x2: X(d), y1: top - 8, y2: h, 'stroke-width': 2, 'stroke-dasharray': d ? '6 6' : '0', style: 'stroke:var(--ink-2)' }); txt(svg, X(d), 20, d ? `DÍA ${d}` : 'HOY', { a: d === 90 ? 'end' : 'middle', size: 16, w: 800, fill: 'var(--ink-2)' }); });
       ACC.forEach((a, i) => {
         const y = top + i * rh;
@@ -221,8 +227,8 @@
 
     ruta(svg) {
       const [w, h] = size(svg), S = [
-        ['Reporte', '15-ago · consumidor'], ['Planta Chía', '16-may · turno noche'], ['6/6 controles', 'todos conformes'],
-        ['CEDI', 'Bucaramanga'], ['Tienda', 'recibe 27-may'], ['Compra', '15-ago · después'],
+        ['Compartir', 'crea el enlace'], ['Escaneo IA', 'halla una llave'], ['Aviso', 'el usuario la borra'],
+        ['Publica', 'en un foro'], ['Rastreador', 'lee el noindex'], ['Buscador', '0 resultados'],
       ];
       const y = h * .42, x = i => 70 + i * (w - 140) / (S.length - 1);
       const d = `M${x(0)} ${y} ` + S.slice(1).map((_, i) => `C ${x(i) + 60} ${y + (i % 2 ? 70 : -70)}, ${x(i + 1) - 60} ${y + (i % 2 ? 70 : -70)}, ${x(i + 1)} ${y}`).join(' ');
@@ -230,32 +236,35 @@
       const p = add(svg, 'path', { id: 'rutaPath', d, fill: 'none', 'stroke-width': 8, 'stroke-linecap': 'round', pathLength: 1, style: 'stroke:var(--green)' }); anim(p, 'draw', 300);
       p.style.animationDuration = '3s';
       S.forEach((s, i) => {
-        const g = add(svg, 'g', {});
-        g.appendChild(el('circle', { cx: x(i), cy: y, r: 26, style: `fill:${i === 2 ? 'var(--green)' : 'var(--white)'};stroke:#151311;stroke-width:5` }));
-        g.appendChild(el('text', { x: x(i), y: y + 9, 'text-anchor': 'middle', 'font-size': 24, style: `font-family:var(--display);fill:${i === 2 ? '#fff' : 'var(--ink)'}` }, i + 1));
+        const g = add(svg, 'g', {}), on = i === 1 || i === 5;
+        g.appendChild(el('circle', { cx: x(i), cy: y, r: 26, style: `fill:${on ? 'var(--green)' : 'var(--white)'};stroke:#151311;stroke-width:5` }));
+        g.appendChild(el('text', { x: x(i), y: y + 9, 'text-anchor': 'middle', 'font-size': 24, style: `font-family:var(--display);fill:${on ? '#fff' : 'var(--ink)'}` }, i + 1));
         g.appendChild(el('text', { x: x(i), y: y + 84, 'text-anchor': 'middle', 'font-size': 23, 'font-weight': 800, style: 'fill:var(--ink)' }, s[0]));
         g.appendChild(el('text', { x: x(i), y: y + 112, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 600, style: 'fill:var(--ink-2)' }, s[1]));
         anim(g, 'pop', 300 + i * 520);
       });
-      const truck = add(svg, 'g', { 'data-motion': '' });
-      truck.appendChild(el('circle', { r: 16, style: 'fill:var(--mustard);stroke:#151311;stroke-width:4' }));
-      const m = el('animateMotion', { dur: '3s', begin: 'indefinite', fill: 'freeze', rotate: '0' }); m.appendChild(el('mpath', { href: '#rutaPath' })); truck.appendChild(m);
-      const st = txt(svg, w / 2, h - 18, 'Resultado: sin desviaciones · la empresa lo comunicó igual', { a: 'middle', size: 24, w: 800, fill: 'var(--green)' }); anim(st, 'up', 3300);
+      const dot = add(svg, 'g', { 'data-motion': '' });
+      dot.appendChild(el('circle', { r: 16, style: 'fill:var(--mustard);stroke:#151311;stroke-width:4' }));
+      const m = el('animateMotion', { dur: '3s', begin: 'indefinite', fill: 'freeze', rotate: '0' }); m.appendChild(el('mpath', { href: '#rutaPath' })); dot.appendChild(m);
+      const st = txt(svg, w / 2, h - 18, 'Resultado del simulacro: la llave nunca se publicó y el enlace no apareció en buscadores', { a: 'middle', size: 23, w: 800, fill: 'var(--green)' }); anim(st, 'up', 3300);
     },
 
     confianza(svg) {
       const [w, h] = size(svg), R = D.confianza, x0 = 44, top = 20, bot = h - 34, pw = w - x0 - 50;
       const step = pw / (R.length - 1), X = i => x0 + i * step, Y = v => bot - v / 100 * (bot - top);
-      const cs = R.findIndex(r => r.fase === 'Crisis'), ce = R.map(r => r.fase).lastIndexOf('Crisis'), pj = R.findIndex(r => r.fase.includes('proyecc')), last = pj - 1;
-      const band = add(svg, 'rect', { x: X(cs) - step / 2, y: top, width: (ce - cs + 1) * step, height: bot - top, style: 'fill:url(#htR);opacity:.35' }); anim(band, 'fade', 200);
-      txt(svg, X(cs) - step / 2 + 8, top + 24, 'CRISIS', { size: 17, w: 800, fill: 'var(--red)' });
+      const pj = R.findIndex(r => r.fase.includes('proyecc')), last = pj - 1;
+      [['Incidente 1', 'SEP-25'], ['Crisis', 'CRISIS']].forEach(([f, lb]) => {
+        const cs = R.findIndex(r => r.fase === f), ce = R.map(r => r.fase).lastIndexOf(f);
+        const band = add(svg, 'rect', { x: X(cs) - step / 2, y: top, width: (ce - cs + 1) * step, height: bot - top, style: 'fill:url(#htR);opacity:.35' }); anim(band, 'fade', 200);
+        txt(svg, X(cs) - step / 2 + 6, top + 24, lb, { size: 15, w: 800, fill: 'var(--red)' });
+      });
       [0, 50, 100].forEach(v => { add(svg, 'line', { x1: x0, x2: x0 + pw, y1: Y(v), y2: Y(v), style: 'stroke:var(--ink-2);opacity:.25' }); txt(svg, x0 - 10, Y(v) + 6, v, { a: 'end', size: 16, w: 700, fill: 'var(--ink-2)' }); });
       add(svg, 'line', { x1: x0, x2: x0 + pw, y1: Y(75), y2: Y(75), 'stroke-width': 3, 'stroke-dasharray': '8 6', style: 'stroke:#C99400' });
-      txt(svg, x0 + 6, Y(75) + 26, 'META 75', { size: 17, w: 800, fill: '#C99400' });
+      txt(svg, X(9), Y(75) + 26, 'META 75', { a: 'middle', size: 17, w: 800, fill: '#C99400' });
       const path = idx => idx.map((i, k) => `${k ? 'L' : 'M'}${X(i)} ${Y(R[i].v)}`).join('');
       const a = add(svg, 'path', { d: path(R.slice(0, pj).map((_, i) => i)), fill: 'none', 'stroke-width': 8, 'stroke-linejoin': 'round', pathLength: 1, style: 'stroke:var(--green)' }); anim(a, 'draw', 300);
       const b = add(svg, 'path', { d: path(R.map((_, i) => i).slice(last)), fill: 'none', 'stroke-width': 6, 'stroke-dasharray': '3 12', 'stroke-linecap': 'round', style: 'stroke:var(--green)' }); anim(b, 'fade', 1500);
-      R.forEach((r, i) => { const c = add(svg, 'circle', { cx: X(i), cy: Y(r.v), r: 7, style: i >= pj ? 'fill:var(--paper);stroke:var(--green);stroke-width:3' : 'fill:var(--green)' }); anim(c, 'pop', 300 + i * 70); if (i % 3 === 0) txt(svg, X(i), bot + 26, `${mes(r.m)} ${r.m.slice(2, 4)}`, { a: 'middle', size: 16, w: 700, fill: 'var(--ink-2)' }); });
+      R.forEach((r, i) => { const c = add(svg, 'circle', { cx: X(i), cy: Y(r.v), r: 7, style: i >= pj ? 'fill:var(--paper);stroke:var(--green);stroke-width:3' : 'fill:var(--green)' }); anim(c, 'pop', 300 + i * 60); if (i % 3 === 0) txt(svg, X(i), bot + 26, `${mes(r.m)} ${r.m.slice(2, 4)}`, { a: 'middle', size: 16, w: 700, fill: 'var(--ink-2)' }); });
       const low = R.reduce((m, r) => r.v < m.v ? r : m), li = R.indexOf(low);
       [[li, low.v, 'var(--red)', 52], [last, R[last].v, 'var(--ink)', -22], [R.length - 1, R.at(-1).v, 'var(--green)', -22]].forEach(([i, v, c, dy], k) => {
         const t = txt(svg, X(i), Y(v) + dy, v, { a: 'middle', size: 54, w: 400, fill: c, font: 'var(--display)' }); anim(t, 'pop', 900 + k * 500);
@@ -263,37 +272,35 @@
     },
 
     ventas(svg) {
-      const [w, h] = size(svg), R = K.filter(r => r.mes >= '2026-03'), base = row('2026-03').ventas_linea_vegana_mm_cop;
-      const bot = h - 34, top = 30, band = w / R.length, bw = band * .66, y = v => bot - v / 460 * (bot - top);
+      const [w, h] = size(svg), R = K.filter(r => r.mes >= '2026-06'), base = row('2026-06').pct_usuarios_que_comparten;
+      const bot = h - 34, top = 30, band = w / R.length, bw = band * .66, y = v => bot - v / 14 * (bot - top);
       R.forEach((r, i) => {
-        const v = r.ventas_linea_vegana_mm_cop, proj = r.fase.includes('proyecc'), x = i * band + (band - bw) / 2;
-        const b = add(svg, 'rect', { x, y: y(v), width: bw, height: bot - y(v), style: proj ? 'fill:url(#htG);stroke:#151311;stroke-width:3' : r.mes >= '2026-04' ? 'fill:var(--ink)' : 'fill:var(--ink-2)' }); anim(b, 'grow', 200 + i * 90);
-        b.appendChild(el('title', {}, `${r.mes}: ${v} MM COP${proj ? ' (proyección)' : ''}`));
+        const v = r.pct_usuarios_que_comparten, proj = r.fase.includes('proyecc'), x = i * band + (band - bw) / 2;
+        const b = add(svg, 'rect', { x, y: y(v), width: bw, height: bot - y(v), style: proj ? 'fill:url(#htG);stroke:#151311;stroke-width:3' : r.mes >= '2026-07' ? 'fill:var(--ink)' : 'fill:var(--ink-2)' }); anim(b, 'grow', 200 + i * 90);
+        b.appendChild(el('title', {}, `${r.mes}: ${nf(v, 1)} %${proj ? ' (proyección)' : ''}`));
         txt(svg, x + bw / 2, bot + 24, mes(r.mes), { a: 'middle', size: 16, w: 700, fill: 'var(--ink-2)' });
-        if (['2026-05', '2026-09', '2027-03'].includes(r.mes)) { const t = txt(svg, x + bw / 2, y(v) - 12, v, { a: 'middle', size: 30, w: 400, font: 'var(--display)', fill: r.mes === '2027-03' ? 'var(--green)' : 'var(--ink)' }); anim(t, 'up', 600 + i * 90); }
+        if (['2026-08', '2026-09', '2027-03'].includes(r.mes)) { const t = txt(svg, x + bw / 2, y(v) - 12, nf(v, 1), { a: 'middle', size: 30, w: 400, font: 'var(--display)', fill: r.mes === '2027-03' ? 'var(--green)' : 'var(--ink)' }); anim(t, 'up', 600 + i * 90); }
       });
       add(svg, 'line', { x1: 0, x2: w, y1: y(base), y2: y(base), 'stroke-width': 3, 'stroke-dasharray': '8 6', style: 'stroke:var(--ink)' });
-      txt(svg, 4, y(base) - 12, `nivel previo: ${base}`, { size: 17, w: 800 });
+      txt(svg, 4, y(base) - 12, `nivel previo (junio): ${nf(base, 1)} %`, { size: 17, w: 800 });
     },
   };
 
   // acciones críticas: una sola fuente para la matriz y la hoja de ruta
   const ACC = [
-    { n: 1, s: 'Bloqueo de liberación 6/6', t: 'Bloqueo de liberación 6/6', o: 'Calidad', imp: 9.6, esf: 1.8, d0: 0, d1: 10 },
-    { n: 2, s: 'Ficha de hechos + auditoría IA', t: 'Ficha de hechos + auditoría IA de mensajes', o: 'Comunicación y Jurídica', imp: 9, esf: 2.6, d0: 0, d1: 14 },
-    { n: 3, s: 'Atención humana a afectados', t: 'Atención humana a afectados', o: 'Atención al Consumidor', imp: 8.2, esf: 4.2, d0: 0, d1: 30 },
-    { n: 4, s: 'Auditoría turno noche, Chía', t: 'Auditoría del turno noche', o: 'Operaciones', imp: 8, esf: 3.4, d0: 7, d1: 45 },
-    { n: 5, s: 'Escucha social y anti-rumor', t: 'Escucha social contra rumores', o: 'Comunicación', imp: 6.2, esf: 3, d0: 14, d1: 40 },
-    { n: 6, s: 'Kit de evidencia distribuidores', t: 'Kit de evidencia para distribuidores', o: 'Comercial', imp: 7.4, esf: 5.6, d0: 30, d1: 60 },
-    { n: 7, s: 'Trazabilidad lote → tienda', t: 'Trazabilidad lote → tienda', o: 'Operaciones y TI', imp: 8.8, esf: 7.6, d0: 20, d1: 80 },
-    { n: 8, s: 'Verificación universitaria', t: 'Verificación universitaria', o: 'Dirección', imp: 7.8, esf: 6.6, d0: 45, d1: 90 },
+    { n: 1, s: 'Noindex legible 6/6', t: 'Ninguna página compartida sin sus 6 verificaciones de no indexación', o: 'Ingeniería web', imp: 9.6, esf: 1.8, d0: 0, d1: 10 },
+    { n: 2, s: 'Ficha de hechos + auditoría IA', t: 'Ficha de hechos + auditoría IA de cada mensaje público', o: 'Comunicaciones y Legal', imp: 9, esf: 2.6, d0: 0, d1: 14 },
+    { n: 3, s: 'Aviso y atención a afectados', t: 'Avisar a cada usuario afectado y atenderlo con una persona', o: 'Privacidad y Soporte', imp: 8.2, esf: 4.2, d0: 0, d1: 30 },
+    { n: 4, s: 'Monitor de buscadores con IA', t: 'Monitor diario de buscadores y archivos web', o: 'Seguridad', imp: 8, esf: 3.4, d0: 7, d1: 45 },
+    { n: 5, s: 'Aviso claro + panel Mis enlaces', t: 'Diálogo de compartir que diga «público y buscable» + panel de enlaces', o: 'Producto', imp: 6.2, esf: 3, d0: 14, d1: 40 },
+    { n: 6, s: 'Escaneo de datos sensibles', t: 'La IA revisa datos sensibles antes de compartir', o: 'Producto e IA', imp: 7.4, esf: 5.6, d0: 30, d1: 60 },
+    { n: 7, s: 'Caducidad e invitación por defecto', t: 'Enlaces que caducan y acceso solo por invitación', o: 'Ingeniería y Producto', imp: 8.8, esf: 7.6, d0: 20, d1: 80 },
+    { n: 8, s: 'Auditoría externa + transparencia', t: 'Auditoría externa y reporte público de transparencia', o: 'Dirección', imp: 7.8, esf: 6.6, d0: 45, d1: 90 },
   ];
   document.querySelectorAll('svg[data-chart]').forEach(svg => charts[svg.dataset.chart]?.(svg));
 
   // ---------- valores calculados desde los datos ----------
-  const lost = K.filter(r => r.mes >= '2026-04' && r.mes <= '2026-09').reduce((s, r) => s + Math.max(0, row('2026-03').ventas_linea_vegana_mm_cop - r.ventas_linea_vegana_mm_cop), 0);
-  document.querySelectorAll('[data-count-lost]').forEach(n => n.dataset.count = lost);
-  document.querySelectorAll('[data-count-gain]').forEach(n => n.dataset.count = row('2027-03').ventas_linea_vegana_mm_cop - row('2026-09').ventas_linea_vegana_mm_cop);
+  document.querySelectorAll('[data-count-gain]').forEach(n => n.dataset.count = Math.round((row('2027-03').pct_usuarios_que_comparten / row('2026-09').pct_usuarios_que_comparten - 1) * 100));
 
   // ---------- efectos al entrar a una diapositiva ----------
   const timers = [];
@@ -311,7 +318,7 @@
     });
     s.querySelectorAll('animateMotion').forEach(m => { try { m.beginElement(); } catch (e) { /* SMIL no disponible */ } });
     s.querySelectorAll('[data-type]').forEach(term => {
-      const L = [['$ ', 'pip install -r requirements.txt'], ['', '✓ pandas · numpy · openpyxl · matplotlib', 'ok'], ['$ ', 'python src/gen_datos.py datos'], ['', 'PQR 1025 | lotes 216 | controles 1307 | kpi 18', 'ok'], ['$ ', 'python src/aed_alimenta_familia.py datos resultados/figuras'], ['', '✓ 994 PQR válidas · 1296 controles · 7 figuras', 'ok'], ['', 'semilla 2026 → siempre los mismos datos', 'ok']];
+      const L = [['$ ', 'pip install -r requirements.txt'], ['', '✓ pandas · numpy · openpyxl · matplotlib', 'ok'], ['$ ', 'python src/gen_datos.py datos'], ['', 'enlaces 2430 | indexados 154 | menciones 1428 | kpi 24', 'ok'], ['$ ', 'python src/aed_claude_enlaces.py datos resultados/figuras'], ['', `✓ ${nf(D.resumen.limpio.enlaces)} enlaces · ${nf(D.resumen.limpio.menciones)} menciones · 8 figuras`, 'ok'], ['', 'semilla 2026 → siempre los mismos datos', 'ok']];
       term.innerHTML = ''; let li = 0;
       const next = () => {
         if (li >= L.length) { term.insertAdjacentHTML('beforeend', '<span class="p">$ </span><span class="blink">▍</span>'); return; }

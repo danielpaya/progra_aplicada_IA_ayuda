@@ -1,290 +1,249 @@
-"""Generador de DATOS SIMULADOS - Caso Alimenta Familia (fines académicos).
-Produce 3 libros Excel coherentes con las cifras ancla del caso:
-  PQR 1.025 registros brutos | 216 lotes | 1.307 controles brutos | lote VEG-BP-2026-047 con 64 reportes únicos de salud.
+"""Generador de DATOS SIMULADOS - Caso Claude (Anthropic): enlaces compartidos que aparecieron en buscadores.
+Fines académicos. Los HECHOS del caso (fechas, comunicados) son públicos y están citados en el informe;
+las CIFRAS de estas tablas son simuladas con IA y no son datos reales de Anthropic.
+
+Produce 3 libros Excel:
+  01 Auditoría simulada de enlaces públicos (muestra de 2.400 enlaces + errores sembrados)
+  02 Menciones en redes y tickets de soporte sobre privacidad (jun-sep 2026)
+  03 Serie mensual de KPI (abr-2025 a mar-2027, con proyección)
 Errores intencionales documentados en la hoja LEEME de cada libro.
+Uso: python src/gen_datos.py datos
 """
 import sys, random
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import numpy as np
 import pandas as pd
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "out"
 rng = np.random.default_rng(2026)
 random.seed(2026)
-AVISO = "DATO SIMULADO – Fines académicos. Caso Alimenta Familia (Universidad de La Sabana)."
+AVISO = ("DATO SIMULADO – Fines académicos. Caso Claude (Anthropic): enlaces compartidos en buscadores. "
+         "Las cifras NO son datos reales de Anthropic. Universidad de La Sabana.")
 
-CRISIS = date(2026, 4, 14)          # noche de la crisis
-LOTE_CRITICO = "VEG-BP-2026-047"
+INCIDENTE_1 = date(2025, 9, 8)    # Google retira ~600 conversaciones indexadas (Forbes, 2025)
+INCIDENTE_2 = date(2026, 7, 25)   # publicación en r/ClaudeAI con la búsqueda site:claude.ai/share
+CORTE = date(2026, 9, 30)         # fecha de corte de la auditoría simulada
 
-# ---------------------------------------------------------------- productos
-VEG = {"BP": "Bebida proteica vegana", "GA": "Galletas veganas de avena", "HA": "Hamburguesa vegetal",
-       "YO": "Yogur vegetal de coco", "LE": "Bebida de almendras", "QU": "Queso vegetal",
-       "BA": "Barra de cereal vegana", "MA": "Mayonesa vegana", "PA": "Pan integral vegano",
-       "CH": "Chocolate vegano"}
-OTR = {("LAC", "LE"): "Leche entera", ("LAC", "QC"): "Queso campesino", ("LAC", "KU"): "Kumis",
-       ("PAN", "TA"): "Tostadas", ("PAN", "PT"): "Pan tajado", ("CER", "GR"): "Granola",
-       ("CER", "AV"): "Avena en hojuelas", ("CER", "AR"): "Arepas de maíz"}
-PLANTAS = ["Planta Chía", "Planta Funza", "Planta Rionegro"]
-TURNOS = ["Mañana", "Tarde", "Noche"]
-PROV = ["Proteínas del Sur S.A.S.", "Agroinsumos Sabana", "Cooperativa Campo Vivo",
-        "Molinos del Valle", "Lácteos La Pradera", "Frutos Secos Andinos"]
-CEDI = ["CEDI Bogotá", "CEDI Medellín", "CEDI Bucaramanga", "CEDI Cali", "CEDI Barranquilla"]
-DISTR = ["Distribuidora El Ahorro", "Supermercados La Canasta", "Mayorista Central",
-         "Tiendas Barrio Unido", "Cadena Mercafamilia", "Minimercados Asociados"]
 
 def rdate(a, b):
     return a + timedelta(days=int(rng.integers(0, (b - a).days + 1)))
 
-# ---------------------------------------------------------------- 216 lotes
-lotes = []
-for k, nom in VEG.items():                       # 10 productos x 12 lotes = 120
-    start = 40 if k == "BP" else int(rng.integers(10, 60))
-    for j in range(12):
-        lotes.append(dict(lote=f"VEG-{k}-2026-{start + j:03d}", producto=nom, linea="Vegana"))
-for (ln, k), nom in OTR.items():                 # 8 productos x 12 lotes = 96
-    start = int(rng.integers(100, 300))
-    for j in range(12):
-        lotes.append(dict(lote=f"{ln}-{k}-2026-{start + j:03d}", producto=nom,
-                          linea={"LAC": "Lácteos", "PAN": "Panadería", "CER": "Cereales"}[ln]))
-assert len(lotes) == 216
-for L in lotes:
-    L["fecha_produccion"] = rdate(date(2026, 1, 5), date(2026, 6, 30))
-    L["planta"] = random.choice(PLANTAS)
-    L["turno"] = random.choice(TURNOS)
-    L["proveedor_principal"] = random.choice(PROV)
-    L["cedi"] = random.choice(CEDI)
-    L["distribuidor"] = random.choice(DISTR)
-    L["unidades"] = int(rng.integers(4000, 18000))
-# anclas del caso
-fix = {
-    "VEG-BP-2026-046": dict(fecha_produccion=date(2026, 3, 30), planta="Planta Chía", turno="Tarde"),
-    "VEG-BP-2026-047": dict(fecha_produccion=date(2026, 4, 2), planta="Planta Chía", turno="Noche",
-                             proveedor_principal="Proteínas del Sur S.A.S.", cedi="CEDI Bogotá", unidades=12600),
-    "VEG-BP-2026-048": dict(fecha_produccion=date(2026, 4, 6), planta="Planta Chía", turno="Mañana"),
-}
-ga = [L for L in lotes if L["lote"].startswith("VEG-GA")][-1]   # lote de la "segunda prueba"
-ga.update(fecha_produccion=date(2026, 5, 16), planta="Planta Chía", turno="Noche", cedi="CEDI Bucaramanga",
-          distribuidor="Minimercados Asociados")
-LOTE_GA = ga["lote"]
-for L in lotes:
-    if L["lote"] in fix:
-        L.update(fix[L["lote"]])
-    # garantizar sesgo: los lotes BP 040-051 salen de Chía, la línea crítica
-    L["fecha_despacho"] = L["fecha_produccion"] + timedelta(days=int(rng.integers(2, 9)))
-ga["fecha_despacho"] = date(2026, 5, 21)
-ga["fecha_recibo_tienda"] = date(2026, 5, 27)
-for L in lotes:
-    L.setdefault("fecha_recibo_tienda", L["fecha_despacho"] + timedelta(days=int(rng.integers(2, 7))))
 
-OTROS = ["VEG-BP-2026-046", "VEG-BP-2026-048", "VEG-BP-2026-049"] + [L["lote"] for L in lotes if L["linea"] == "Vegana" and not L["lote"].startswith("VEG-BP")][:20]
-PROTEGIDOS = set(OTROS) | {LOTE_CRITICO, LOTE_GA}
-# ---------------------------------------------------------------- 1.307 controles
-CONTROLES = [("Bacillus cereus", "UFC/g", 0, 100), ("Salmonella spp.", "presencia/25g", 0, 0),
-             ("Alérgenos (trazas leche/huevo)", "ppm", 0, 5),
-             ("Composición declarada (proteína)", "g/100g", None, None),
-             ("Humedad / pH", "%", 0, 12), ("Etiquetado", "check", None, None)]
-RESP = ["Analista A. Rojas", "Analista M. Pardo", "Analista J. Gómez", "Lab. externo BioAndes"]
-ctrl = []
-cid = 1
-for L in lotes:
-    fp = L["fecha_produccion"]
-    pre = fp < CRISIS
-    riesgo = 0.14 if (pre and L["planta"] == "Planta Chía" and L["turno"] == "Noche") else (0.025 if pre else 0.0)
-    for (c, u, lo, hi) in CONTROLES:
-        res, val = "Conforme", None
-        if c == "Bacillus cereus":
-            val = float(rng.integers(5, 60))
-        elif c == "Salmonella spp.":
-            val = 0.0
-        elif c.startswith("Alérgenos"):
-            val = round(float(rng.uniform(0, 2.5)), 2)
-        elif c.startswith("Composición"):
-            decl = 20.0 if "BP" in L["lote"] else 8.0
-            val = round(decl * float(rng.normal(1, 0.025)), 2)
-        elif c.startswith("Humedad"):
-            val = round(float(rng.uniform(3, 9)), 2)
-        if rng.random() < riesgo:
-            res, val = "No realizado", None
-        elif rng.random() < 0.015:
-            res = "No conforme"
-        ctrl.append(dict(id_control=f"C{cid:05d}", lote=L["lote"], control=c, unidad=u, valor_medido=val,
-                         resultado=res, fecha_control=fp + timedelta(days=int(rng.integers(0, 3))),
-                         responsable=random.choice(RESP)))
-        cid += 1
-# lote crítico: controles omitidos + composición no conforme
-for r in ctrl:
-    if r["lote"] == LOTE_CRITICO:
-        if r["control"] in ("Bacillus cereus", "Alérgenos (trazas leche/huevo)"):
-            r.update(resultado="No realizado", valor_medido=None)
-        elif r["control"].startswith("Composición"):
-            r.update(resultado="No conforme", valor_medido=14.2)
+def pick(opts):
+    k, p = zip(*opts.items())
+    return k[int(rng.choice(len(k), p=np.array(p) / sum(p)))]
+
+
+# ================================================================ 1) ENLACES PÚBLICOS (2.400)
+PUBLICADO = {"Solo mensajería privada": 78, "Reddit": 5, "X (Twitter)": 5, "Foro o Discord público": 4,
+             "Blog o sitio web": 4, "Repositorio GitHub": 4}
+P_INDEX = {"Solo mensajería privada": .004, "Reddit": .32, "X (Twitter)": .18, "Foro o Discord público": .25,
+           "Blog o sitio web": .40, "Repositorio GitHub": .22}
+TEMAS = {"Programación": 30, "Trabajo y documentos": 20, "Escritura creativa": 14, "Educación": 10,
+         "Asuntos personales": 8, "Salud": 6, "Finanzas y cripto": 6, "Legal": 6}
+SENS = {  # probabilidad de cada tipo de dato sensible según el tema
+    "Programación": {"Credenciales, llaves o cripto": .14},
+    "Trabajo y documentos": {"Documentos internos de empresa": .45, "Datos personales de contacto": .08},
+    "Escritura creativa": {"Datos personales de contacto": .02},
+    "Educación": {"Datos de menores de edad": .12, "Datos personales de contacto": .06},
+    "Asuntos personales": {"Datos personales de contacto": .40},
+    "Salud": {"Datos de salud": .65},
+    "Finanzas y cripto": {"Credenciales, llaves o cripto": .45},
+    "Legal": {"Datos personales de contacto": .45},
+}
+NIVEL = {"Credenciales, llaves o cripto": "Alto", "Datos de salud": "Alto", "Datos de menores de edad": "Alto",
+         "Datos personales de contacto": "Medio", "Documentos internos de empresa": "Medio", "Ninguno": "Bajo"}
+PAISES = {"Estados Unidos": 30, "India": 10, "Reino Unido": 8, "Brasil": 7, "Alemania": 6, "México": 6,
+          "España": 5, "Colombia": 5, "Argentina": 4, "Francia": 4, "Otro": 15}
+
+links = []
+for i in range(2400):
+    tipo = "Artefacto" if rng.random() < .30 else "Conversación"
+    pub = pick(PUBLICADO)
+    tema = pick(TEMAS)
+    s = "Ninguno"
+    for k, p in SENS.get(tema, {}).items():
+        if rng.random() < p:
+            s = k
+            break
+    creado = rdate(date(2025, 5, 1), date(2026, 7, 20))
+    p_idx = P_INDEX[pub] * (1.3 if tipo == "Artefacto" and pub != "Solo mensajería privada" else 1)
+    idx = rng.random() < p_idx
+    ap = ret = None
+    buscador = None
+    if idx:
+        buscador = pick({"Google": 55, "Bing": 25, "Google y Bing": 15, "Brave": 5})
+        if creado < INCIDENTE_1 - timedelta(days=7):            # primer episodio (2025)
+            ap = min(creado + timedelta(days=int(rng.gamma(2, 6)) + 2), INCIDENTE_1 - timedelta(days=1))
+            ret = INCIDENTE_1 + timedelta(days=int(rng.integers(0, 3)))
+        elif creado > INCIDENTE_1:                               # se acumulan hasta el segundo episodio (2026)
+            ap = min(creado + timedelta(days=int(rng.integers(2, 21))), INCIDENTE_2 - timedelta(days=1))
+            lo, hi = (1, 4) if tipo == "Conversación" else (2, 11)
+            ret = INCIDENTE_2 + timedelta(days=int(rng.integers(lo, hi + 1)))
+        else:                                                    # creado justo durante el primer retiro: no alcanza a indexarse
+            idx, buscador = False, None
+    desact = rng.random() < (.37 if idx else .12)
+    f_des = None
+    if desact:
+        f_des = (INCIDENTE_2 + timedelta(days=int(rng.integers(1, 27)))) if idx else rdate(creado, CORTE)
+    links.append(dict(
+        id_enlace=f"{'AR' if tipo == 'Artefacto' else 'SH'}-{i + 1:05d}", tipo=tipo, fecha_creacion=creado,
+        plan=pick({"Free": 52, "Pro": 36, "Max": 12}), pais=pick(PAISES), publicado_en=pub, tema=tema,
+        dato_sensible=s, nivel_sensibilidad=NIVEL[s], indexado="Sí" if idx else "No", buscador=buscador,
+        fecha_aparicion=ap, fecha_retiro=ret,
+        horas_visible=round((ret - ap).days * 24 + float(rng.uniform(-6, 6)), 1) if idx else None,
+        desactivado_por_usuario="Sí" if desact else "No", fecha_desactivacion=f_des,
+    ))
+
+# errores intencionales
+L = links
+ix = rng.choice(len(L), 60, replace=False)
+for i in ix[:15]:
+    L[i]["plan"] = None                                              # vacío
+for i in ix[15:27]:
+    L[i]["pais"] = None                                              # vacío
+for i in ix[27:35]:
+    L[i]["fecha_creacion"] = random.choice(["2062-07-25", "2025-02-30", "1999-09-08"])   # imposible
+idx_ix = [i for i, r in enumerate(L) if r["indexado"] == "Sí"]
+for i in rng.choice(idx_ix, 9, replace=False):
+    L[i]["horas_visible"] = -abs(L[i]["horas_visible"])              # negativo (error de signo)
+for i in ix[35:42]:
+    L[i]["indexado"] = random.choice(["si", "SI ", "S"]) if L[i]["indexado"] == "Sí" else random.choice(["no", "NO "])  # etiqueta inconsistente
+dups = [dict(L[i]) for i in rng.choice(len(L), 30, replace=False)]   # 30 duplicados exactos
+df_links = pd.DataFrame(L + dups).sample(frac=1, random_state=7).reset_index(drop=True)
+for c in ["fecha_creacion", "fecha_aparicion", "fecha_retiro", "fecha_desactivacion"]:
+    df_links[c] = df_links[c].map(lambda v: None if v is None or (isinstance(v, float) and np.isnan(v)) else str(v))
+
+# ================================================================ 2) MENCIONES Y SOPORTE (jun-sep 2026)
+INI, FIN = date(2026, 6, 1), date(2026, 9, 30)
+TIPO_BASE = {"Pregunta general de privacidad": 30, "Solicitud de borrado de datos": 15, "Queja de privacidad": 15,
+             "Otro tema (no privacidad)": 40}
+TIPO_CRISIS = {"Queja de privacidad": 30, "Solicitud de retiro o desindexación": 20, "Pregunta: ¿mi chat es público?": 22,
+               "Cancelación de suscripción": 8, "Defensa: «es comportamiento esperado»": 10, "Consulta de empresa o cumplimiento": 10}
+CANAL = {"Reddit": 25, "X (Twitter)": 25, "Soporte (ticket)": 30, "Foro de desarrolladores": 8, "Prensa": 4, "LinkedIn": 8}
+RELACION = {"Tenía un enlace indexado": 22, "Compartió, sin indexar": 32, "Nunca compartió": 46}
+
+men = []
+d = INI
+while d <= FIN:
+    t = (d - INCIDENTE_2).days
+    lam = 5.5 + (120 * np.exp(-t / 6) if t >= 0 else 0)
+    for _ in range(int(rng.poisson(lam))):
+        crisis = 0 <= t <= 30
+        tipo = pick(TIPO_CRISIS) if (t >= 0 and rng.random() < np.exp(-t / 25)) else pick(TIPO_BASE)
+        canal = pick(CANAL)
+        if crisis:
+            base_s = .2 if tipo.startswith("Defensa") else -.6
         else:
-            r["resultado"] = "Conforme"
-    if r["lote"] in PROTEGIDOS and r["lote"] != LOTE_CRITICO:
-        if r["resultado"] != "Conforme":
-            r["resultado"] = "Conforme"
-            if r["valor_medido"] is None and not r["control"] in ("Etiquetado",):
-                r["valor_medido"] = 20.1 if r["control"].startswith("Comp") else 1.0
-assert len(ctrl) == 1296
-# errores intencionales
-idx = rng.choice([i for i, r in enumerate(ctrl) if r["lote"] not in PROTEGIDOS], 18, replace=False)
-for i in idx[:9]:
-    ctrl[i]["resultado"] = None                                         # vacío
-for i in idx[9:14]:
-    L = next(l for l in lotes if l["lote"] == ctrl[i]["lote"])
-    ctrl[i]["fecha_control"] = L["fecha_produccion"] - timedelta(days=int(rng.integers(20, 60)))  # imposible
-for i in idx[14:18]:
-    ctrl[i]["valor_medido"] = random.choice([-3.5, 999.0])              # fuera de rango
-dups = [dict(ctrl[i]) for i in rng.choice(len(ctrl), 11, replace=False)]  # duplicados exactos
-ctrl += dups
-assert len(ctrl) == 1307
-df_ctrl = pd.DataFrame(ctrl).sample(frac=1, random_state=7).reset_index(drop=True)
-df_lotes = pd.DataFrame(lotes)
+            base_s = -.05 if t < 0 else -.22
+        tr = None
+        if canal == "Soporte (ticket)":
+            tr = round(float(rng.gamma(4, 5 if t < 0 else (15.5 if crisis else 3.8))), 1)
+        priv = tipo not in ("Otro tema (no privacidad)",)
+        rel = pick(RELACION) if (priv and t >= 0) else ("Nunca compartió" if not priv else pick({"Compartió, sin indexar": 40, "Nunca compartió": 60}))
+        men.append(dict(fecha=d, canal=canal, tipo=tipo, plan=pick({"Free": 50, "Pro": 34, "Max": 10, "Team/Enterprise": 6}),
+                        pais=pick(PAISES), sentimiento=round(float(np.clip(rng.normal(base_s, .22), -1, 1)), 2),
+                        tiempo_respuesta_h=tr, relacion_con_enlaces=rel,
+                        estado=random.choice(["Cerrado", "Cerrado", "Cerrado", "En gestión"]) if d < date(2026, 9, 15) else random.choice(["Abierto", "En gestión"])))
+    d += timedelta(days=1)
+men.sort(key=lambda r: r["fecha"])
+for i, r in enumerate(men, 1):
+    r["id_mencion"] = f"M-{i:05d}"
+men_limpio = [dict(r) for r in men]
+ix = rng.choice(len(men), 50, replace=False)
+for i in ix[:10]:
+    men[i]["canal"] = None                                           # vacío
+for i in ix[10:19]:
+    men[i]["fecha"] = random.choice(["2026-07-32", "2062-07-25", "2016-07-25"])   # imposible
+tk = [i for i, r in enumerate(men) if r["tiempo_respuesta_h"] is not None and i not in ix[:19]]
+for i in rng.choice(tk, 6, replace=False):
+    men[i]["tiempo_respuesta_h"] = -men[i]["tiempo_respuesta_h"]     # negativo
+for i in ix[19:24]:
+    men[i]["sentimiento"] = random.choice([3.5, -7.0])                # fuera de la escala -1..1
+for i in ix[24:32]:
+    men[i]["relacion_con_enlaces"] = "N/D"                            # vacío disfrazado
+dups = [dict(men[i]) for i in rng.choice(len(men), 20, replace=False)]
+men += dups
+cols = ["id_mencion", "fecha", "canal", "tipo", "plan", "pais", "sentimiento", "tiempo_respuesta_h",
+        "relacion_con_enlaces", "estado"]
+df_men = pd.DataFrame(men)[cols].sample(frac=1, random_state=3).reset_index(drop=True)
+df_men["fecha"] = df_men["fecha"].astype(str)
 
-# ---------------------------------------------------------------- 1.025 PQR
-CIUD = ["Bogotá", "Medellín", "Cali", "Barranquilla", "Bucaramanga", "Chía", "Pereira", "Cartagena"]
-CANAL = ["Línea de atención", "Correo", "WhatsApp", "Redes sociales", "Web", "Punto de venta"]
-prod_of = {L["lote"]: (L["producto"], L["linea"]) for L in lotes}
-all_prod = [(n, "Vegana") for n in VEG.values()] + [(n, {"LAC": "Lácteos", "PAN": "Panadería", "CER": "Cereales"}[k[0]]) for k, n in OTR.items()]
+# ================================================================ 3) SERIE KPI (abr-2025 a mar-2027)
+meses = pd.period_range("2025-04", "2027-03", freq="M")
 
-def fecha_pqr(tipo):
-    """Fechas 2026-01-02 a 2026-09-30 con pico posterior a la crisis."""
-    if tipo in ("Etiquetado", "Consulta de seguridad", "Rumor / desinformación") and rng.random() < 0.75:
-        return CRISIS + timedelta(days=int(abs(rng.normal(0, 18))))
-    return rdate(date(2026, 1, 2), date(2026, 9, 30))
 
-def t_resp(f):
-    if f < CRISIS:
-        return round(float(rng.gamma(4, 7)), 1)          # ~28 h
-    if f < CRISIS + timedelta(days=60):
-        return round(float(rng.gamma(5, 14)), 1)         # ~70 h
-    return round(float(rng.gamma(4, 4)), 1)              # ~16 h
-
-def sent(f, tipo):
-    base = -0.1 if f < CRISIS else (-0.65 if f < CRISIS + timedelta(days=60) else -0.25)
-    if tipo == "Salud":
-        base -= 0.2
-    return round(float(np.clip(rng.normal(base, 0.2), -1, 1)), 2)
-
-pqr = []
-def add(tipo, lote=None, f=None, sev=None, desc="", prod=None):
-    if lote:
-        prod = prod_of[lote]
-    prod = prod or random.choice(all_prod)
-    f = f or fecha_pqr(tipo)
-    pqr.append(dict(fecha=f, canal=random.choice(CANAL), ciudad=random.choice(CIUD), producto=prod[0],
-                    linea=prod[1], lote=lote, tipo=tipo,
-                    severidad=sev or int(rng.integers(1, 4)), descripcion=desc,
-                    estado=None, tiempo_respuesta_h=t_resp(f), sentimiento=sent(f, tipo)))
-
-SINT = ["náuseas", "vómito", "dolor abdominal", "diarrea", "reacción alérgica leve", "malestar general"]
-# 64 reportes únicos de salud del lote crítico
-for _ in range(64):
-    f = CRISIS + timedelta(days=int(np.clip(rng.gamma(2, 4) - 2, -2, 26)))
-    add("Salud", LOTE_CRITICO, f, int(rng.choice([3, 4, 5], p=[.45, .4, .15])),
-        f"Reporta {random.choice(SINT)} tras consumir la bebida proteica")
-# 23 reportes de salud que mencionan otros lotes sin respaldo de laboratorio
-otros = OTROS
-for i in range(23):
-    lt = otros[i % 3] if i < 12 else random.choice(otros[3:])
-    add("Salud", lt, CRISIS + timedelta(days=int(rng.integers(0, 40))), int(rng.choice([2, 3, 4])),
-        f"Menciona {random.choice(SINT)}; no hay muestra analizada")
-# 14 reportes de salud previos/independientes, leves
-for _ in range(14):
-    add("Salud", None, None, int(rng.choice([1, 2, 3])), "Malestar leve, sin lote identificado")
-# segunda prueba (15-ago)
-add("Salud", LOTE_GA, date(2026, 8, 15), 2, "Malestar leve tras comer galletas veganas; pregunta si su lote está bien")
-# resto
-dist = {"Etiquetado": 118, "Calidad sensorial": 250, "Empaque": 140, "Consulta de seguridad": 210,
-        "Rumor / desinformación": 46, "Felicitación": 41, "Disponibilidad en tienda": 93}
-DESC = {"Etiquetado": "Duda sobre cantidades declaradas en la etiqueta",
-        "Calidad sensorial": "Sabor o textura diferente a lo habitual", "Empaque": "Empaque defectuoso o abierto",
-        "Consulta de seguridad": "Pregunta si los demás productos son seguros",
-        "Rumor / desinformación": "Comparte documento que circula en redes",
-        "Felicitación": "Felicita por la atención recibida", "Disponibilidad en tienda": "No encuentra la línea vegana"}
-for t, n in dist.items():
-    for _ in range(n):
-        lote = random.choice([L["lote"] for L in lotes]) if rng.random() < 0.55 else None
-        add(t, lote, None, 1 if t == "Felicitación" else None, DESC[t])
-assert len(pqr) == 1000, len(pqr)
-for p in pqr:
-    p["estado"] = random.choice(["Cerrado", "Cerrado", "Cerrado", "En gestión"]) if p["fecha"] < date(2026, 9, 1) else random.choice(["Abierto", "En gestión"])
-pqr.sort(key=lambda p: p["fecha"])
-for i, p in enumerate(pqr, 1):
-    p["id_pqr"] = f"PQR-{i:05d}"
-# errores intencionales
-ix = rng.choice([i for i, p in enumerate(pqr) if p["tipo"] != "Salud"], 70, replace=False)
-for i in ix[:12]:
-    pqr[i]["ciudad"] = None
-for i in ix[12:20]:
-    pqr[i]["canal"] = None
-for i in ix[20:26]:
-    pqr[i]["fecha"] = random.choice(["2062-04-15", "1999-04-14", "2026-13-02"])   # imposibles
-for i in ix[26:33]:
-    pqr[i]["tiempo_respuesta_h"] = -abs(pqr[i]["tiempo_respuesta_h"])            # negativo
-for i in ix[33:38]:
-    pqr[i]["severidad"] = 9                                                      # escala 1-5
-for i in ix[38:48]:
-    if pqr[i]["tipo"] != "Salud":
-        pqr[i]["lote"] = "N/D"                                                   # vacío disfrazado
-dup_src = [i for i in range(len(pqr)) if pqr[i]["lote"] == LOTE_CRITICO][:9] + list(rng.choice([i for i, p in enumerate(pqr) if p["tipo"] != "Salud"], 16, replace=False))
-dups = [dict(pqr[i]) for i in dup_src]                                           # 25 duplicados (mismo id)
-pqr += dups
-assert len(pqr) == 1025
-cols = ["id_pqr", "fecha", "canal", "ciudad", "producto", "linea", "lote", "tipo", "severidad", "descripcion",
-        "estado", "tiempo_respuesta_h", "sentimiento"]
-df_pqr = pd.DataFrame(pqr)[cols].sample(frac=1, random_state=3).reset_index(drop=True)
-df_pqr["fecha"] = df_pqr["fecha"].astype(str)
-
-# ---------------------------------------------------------------- serie KPI 18 meses
-meses = pd.period_range("2025-10", "2027-03", freq="M")
 def fase(m):
-    if m < pd.Period("2026-04", "M"): return "Antes"
-    if m <= pd.Period("2026-06", "M"): return "Crisis"
-    if m <= pd.Period("2026-09", "M"): return "Recuperación"
-    return "Recuperación (proyección)"
-curve = {  # valores por mes, simulados
-    "indice_confianza_0_100":    [78,79,78,80,79,80, 41,38,45, 52,57,61, 64,67,69,71,73,75],
-    "sentimiento_neto_pct":      [34,36,33,35,37,36,-48,-55,-31,-18,-6,3, 9,14,18,21,24,27],
-    "nps":                       [46,47,45,48,47,49,-12,-18,-5, 8,15,21, 25,29,32,35,37,40],
-    "ventas_linea_vegana_mm_cop":[0,0,0,0,180,410, 120,60,95, 150,210,265, 300,330,360,385,405,430],
-    "pct_controles_realizados":  [96.8,97.1,96.5,96.9,97.2,96.4, 99.1,100,100, 100,100,100, 100,100,100,100,100,100],
-    "tiempo_rastreo_lote_h":     [72,72,70,72,74,72, 60,36,20, 12,8,6, 5,5,4,4,4,4],
-    "tiempo_respuesta_pqr_h":    [29,28,30,27,28,29, 71,74,52, 31,22,17, 15,14,13,12,12,12],
-    "pct_distribuidores_activos":[100,100,100,100,100,100, 72,58,61, 70,79,85, 88,90,92,94,95,96],
-    "pct_mensajes_auditados":    [0,0,0,0,0,0, 40,95,100, 100,100,100, 100,100,100,100,100,100],
-    "ratio_hechos_promesas":     [None]*6 + [0.6,0.9,1.3, 1.5,2.1,2.6, 2.8,3.0,3.1,3.2,3.3,3.4],
-    "recompra_pct":              [41,42,41,43,42,43, 22,19,24, 28,31,34, 36,37,38,39,40,41],
+    if m < pd.Period("2025-09", "M"): return "Antes"
+    if m == pd.Period("2025-09", "M"): return "Incidente 1"
+    if m < pd.Period("2026-07", "M"): return "Entre incidentes"
+    if m <= pd.Period("2026-08", "M"): return "Crisis"
+    if m == pd.Period("2026-09", "M"): return "Contención"
+    return "Plan (proyección)"
+
+
+# enlaces de la muestra visibles en buscadores durante cada mes (se calcula desde la tabla 1, sin errores)
+vis = []
+for m in meses:
+    a, b = m.start_time.date(), m.end_time.date()
+    vis.append(sum(1 for r in links if r["fecha_aparicion"] and r["fecha_aparicion"] <= b and r["fecha_retiro"] >= a))
+
+curve = {  # 24 valores por indicador · abr-25 … mar-27 · simulados
+    "indice_confianza_privacidad_0_100": [81, 82, 81, 83, 82, 66, 70, 73, 75, 76, 77, 78, 78, 79, 80, 49, 41, 52, 57, 62, 66, 69, 72, 75],
+    "nps":                               [44, 45, 43, 46, 45, 21, 26, 30, 33, 34, 36, 37, 37, 38, 38, -6, -14, -2, 5, 11, 17, 22, 27, 32],
+    "pct_usuarios_que_comparten":        [9.8, 10.1, 10.4, 10.9, 11.2, 9.0, 9.6, 10.2, 10.8, 11.1, 11.5, 11.8, 12.0, 12.2, 12.4, 7.1, 6.2, 7.4, 8.3, 9.2, 10.0, 10.7, 11.3, 12.0],
+    "pct_paginas_bloqueadas_robots":     [100] * 24,
+    "pct_paginas_noindex_legible":       [0] * 18 + [40, 100, 100, 100, 100, 100],
+    "tiempo_desindexacion_h":            [None] * 5 + [96] + [None] * 9 + [72, 60, 30, 12, 6, 5, 4, 4, 4],
+    "tiempo_respuesta_soporte_h":        [21, 20, 22, 20, 21, 48, 26, 23, 22, 21, 20, 21, 20, 21, 20, 63, 41, 17, 12, 12, 12, 12, 12, 12],
+    "pct_enlaces_escaneo_sensibles":     [0] * 18 + [0, 25, 60, 90, 100, 100],
+    "pct_mensajes_auditados":            [0] * 15 + [10, 55, 100, 100, 100, 100, 100, 100, 100],
+    "ratio_hechos_promesas":             [None] * 15 + [0.4, 0.8, 1.6, 2.0, 2.4, 2.7, 3.0, 3.2, 3.4],
 }
-df_kpi = pd.DataFrame({"mes": meses.astype(str), "fase": [fase(m) for m in meses], **curve})
-df_kpi.loc[df_kpi["ventas_linea_vegana_mm_cop"] == 0, "ventas_linea_vegana_mm_cop"] = None  # línea lanzada feb-26
+# jun-sep 2026: el tiempo de respuesta mensual sale de los tickets simulados del libro 02 (antes de sembrar errores)
+for k, m in enumerate(meses):
+    if pd.Period("2026-06", "M") <= m <= pd.Period("2026-09", "M"):
+        v = [r["tiempo_respuesta_h"] for r in men_limpio if r["tiempo_respuesta_h"] is not None
+             and pd.Period(r["fecha"], "M") == m]
+        curve["tiempo_respuesta_soporte_h"][k] = round(float(np.median(v)))
+df_kpi = pd.DataFrame({"mes": meses.astype(str), "fase": [fase(m) for m in meses],
+                       "enlaces_muestra_visibles_en_buscadores": vis, **curve})
+df_kpi.loc[df_kpi["fase"] == "Plan (proyección)", "enlaces_muestra_visibles_en_buscadores"] = 0
 
-# ---------------------------------------------------------------- escribir
-PROMPT_PQR = ("Genera un dataset simulado de 1.025 PQR de Alimenta Familia (ene-sep 2026) con las columnas indicadas; "
-              "incluye 64 reportes únicos de salud del lote VEG-BP-2026-047 concentrados tras el 14-abr-2026, 23 reportes "
-              "de salud que mencionan otros lotes sin respaldo de laboratorio, y errores intencionales documentados "
-              "(25 duplicados, vacíos, fechas imposibles, tiempos negativos, severidad fuera de escala).")
-PROMPT_TRZ = ("Genera la trazabilidad simulada de 216 lotes (10 productos veganos y 8 de otras líneas) y 1.307 registros de "
-              "control de calidad (6 controles por lote + 11 duplicados). El lote VEG-BP-2026-047 (Planta Chía, turno noche) "
-              "tiene Bacillus cereus y alérgenos 'No realizado' y la proteína declarada 20 g frente a 14,2 g medidos. Los lotes "
-              "046 y 048 son conformes. Incluye resultados vacíos, fechas de control previas a la producción y valores fuera de rango.")
-PROMPT_KPI = ("Genera una serie mensual simulada de 18 meses (oct-2025 a mar-2027) con los KPI de confianza, operación y "
-              "comercial de Alimenta Familia, marcando las fases Antes, Crisis (abr-jun 2026) y Recuperación.")
+# ================================================================ escribir
+PROMPT_LNK = ("Genera una auditoría simulada de 2.400 enlaces públicos de Claude (conversaciones y artefactos) creados entre "
+              "may-2025 y jul-2026, con dónde se publicó cada enlace, tema, dato sensible, si fue indexado, en qué buscador, "
+              "fechas de aparición y retiro, y si el usuario lo desactivó. La probabilidad de indexación depende de dónde se "
+              "publicó el enlace (robots.txt bloquea el rastreo pero no impide indexar una URL enlazada). Los retiros ocurren "
+              "tras los dos episodios públicos (8-sep-2025 y 25-jul-2026). Siembra errores y documéntalos.")
+PROMPT_MEN = ("Genera menciones en redes y tickets de soporte simulados sobre privacidad de Claude entre jun y sep de 2026: "
+              "volumen base de ~5,5 por día y un pico tras el 25-jul-2026 que decae en unas 6 semanas; tipo, canal, plan, "
+              "sentimiento (-1 a 1), tiempo de respuesta para tickets y relación del usuario con los enlaces (si tenía uno "
+              "indexado, si compartió sin indexar o si nunca compartió). Siembra errores y documéntalos.")
+PROMPT_KPI = ("Genera una serie mensual simulada (abr-2025 a mar-2027) de KPI de confianza, operación y uso para la función "
+              "Compartir de Claude, con las fases Antes, Incidente 1, Entre incidentes, Crisis, Contención y Plan (proyección).")
 
-def leeme(prompt, errores):
-    return pd.DataFrame({"campo": ["AVISO", "Prompt de generación (IA)", "Errores intencionales"],
-                         "valor": [AVISO, prompt, errores]})
 
-with pd.ExcelWriter(f"{OUT}/01_Registro_PQR_y_Reclamos_Alimenta_Familia.xlsx") as w:
-    leeme(PROMPT_PQR, "25 duplicados exactos; 12 ciudades vacías; 8 canales vacíos; 10 lotes 'N/D'; 6 fechas imposibles; "
-                      "7 tiempos de respuesta negativos; 5 severidades = 9 (escala 1-5). La columna fecha se guarda como texto a propósito, para conservar las fechas imposibles (p. ej. 2026-13-02).").to_excel(w, sheet_name="LEEME", index=False)
-    df_pqr.to_excel(w, sheet_name="PQR", index=False)
-with pd.ExcelWriter(f"{OUT}/02_Trazabilidad_de_Lotes_y_Controles_de_Calidad.xlsx") as w:
-    leeme(PROMPT_TRZ, "11 controles duplicados; 9 resultados vacíos; 5 fechas de control anteriores a la producción; "
-                      "4 valores medidos fuera de rango (-3,5 o 999).").to_excel(w, sheet_name="LEEME", index=False)
-    df_lotes.to_excel(w, sheet_name="Lotes", index=False)
-    df_ctrl.to_excel(w, sheet_name="Controles", index=False)
-with pd.ExcelWriter(f"{OUT}/03_Serie_KPI_18_meses.xlsx") as w:
-    leeme(PROMPT_KPI, "Sin errores intencionales. Oct-2026 a mar-2027 = proyección simulada.").to_excel(w, sheet_name="LEEME", index=False)
+def leeme(prompt, errores, extra=""):
+    return pd.DataFrame({"campo": ["AVISO", "Prompt de generación (IA)", "Errores intencionales", "Notas"],
+                         "valor": [AVISO, prompt, errores, extra]})
+
+
+with pd.ExcelWriter(f"{OUT}/01_Auditoria_Enlaces_Compartidos.xlsx") as w:
+    leeme(PROMPT_LNK, "30 duplicados exactos; 15 planes vacíos; 12 países vacíos; 8 fechas de creación imposibles "
+                      "(p. ej. 2025-02-30); 9 horas visibles negativas; 7 etiquetas inconsistentes en 'indexado' (si, SI, S, no).",
+          "Las fechas se guardan como texto a propósito, para conservar las fechas imposibles. Según la prensa, las cuentas "
+          "Team y Enterprise no pueden compartir públicamente, por eso la muestra solo incluye Free, Pro y Max."
+          ).to_excel(w, sheet_name="LEEME", index=False)
+    df_links.to_excel(w, sheet_name="Enlaces", index=False)
+with pd.ExcelWriter(f"{OUT}/02_Menciones_y_Soporte_Privacidad.xlsx") as w:
+    leeme(PROMPT_MEN, "20 duplicados exactos; 10 canales vacíos; 9 fechas imposibles; 6 tiempos de respuesta negativos; "
+                      "5 sentimientos fuera de la escala -1 a 1; 8 relaciones 'N/D'.",
+          "tiempo_respuesta_h solo aplica a los tickets de soporte.").to_excel(w, sheet_name="LEEME", index=False)
+    df_men.to_excel(w, sheet_name="Menciones", index=False)
+with pd.ExcelWriter(f"{OUT}/03_Serie_KPI_24_meses.xlsx") as w:
+    leeme(PROMPT_KPI, "Sin errores intencionales.",
+          "Oct-2026 a mar-2027 = proyección del plan. 'enlaces_muestra_visibles_en_buscadores' se calcula desde el libro 01. "
+          "Indicadores ilustrativos: no son métricas oficiales de Anthropic.").to_excel(w, sheet_name="LEEME", index=False)
     df_kpi.to_excel(w, sheet_name="KPI", index=False)
-print("PQR", len(df_pqr), "| lotes", len(df_lotes), "| controles", len(df_ctrl), "| kpi", len(df_kpi), "| lote GA", LOTE_GA)
+print("enlaces", len(df_links), "| indexados", sum(r["indexado"] == "Sí" for r in links), "| menciones", len(df_men), "| kpi", len(df_kpi))

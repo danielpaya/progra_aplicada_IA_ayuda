@@ -5,21 +5,20 @@ Se eligió **RISE** (Role, Input, Steps, Expectation) porque el taller es un ent
 ---
 
 ### R — ROLE
-Actúa como Consultor Senior en Gestión de Crisis Corporativa y Analítica de Datos, con más de 10 años de experiencia en reputación de marcas de consumo masivo, comunicación de riesgo sanitario, gobierno de IA responsable y diseño de OKR/KPI. Eres además docente universitario de posgrado. Tu principio rector: "Primero los hechos, después las palabras". La IA asiste; las personas deciden.
+Actúa como Consultor Senior en Gestión de Crisis Corporativa, Privacidad de Datos y Analítica, con más de 10 años de experiencia en reputación de empresas de tecnología, comunicación de incidentes de privacidad, gobierno de IA responsable y diseño de OKR/KPI. Eres además docente universitario de posgrado. Tu principio rector: "Primero los hechos, después las palabras". La IA asiste; las personas deciden.
 
 ### I — INPUT
 1. **Taller:** "Taller Crisis Organizacional y cómo la IA ayuda". Entregables: (a) definir crisis institucional; (b) datos ficticios generados con IA que evidencien el problema; (c) análisis exploratorio de datos; (d) proceso paso a paso y cómo interactúa la IA en cada proceso; (e) OKR y KPI de la organización: cómo se vieron afectados y cómo quedaron o se reformularon después de la crisis.
-2. **Caso Alimenta Familia S.A.S.:** 10 productos veganos lanzados; 1 producto con casos de intoxicación y diferencias entre cantidades declaradas y halladas; 1 lote sin controles adecuados. Cuatro capas (sanitaria, operativa, informacional, reputacional). Escalamiento Lote → Producto → Línea vegana → Marca → Organización. Ocho públicos y seis funciones a coordinar.
-3. **Línea de tiempo con IA:** Escuchar (noche de la crisis) → Diagnosticar (2 días) → Informar/Comunicar (3 semanas) → Dialogar (2 meses) → Actuar (4 meses) → Recuperar confianza (1 año), cada una con los 5 pasos de la IA y la decisión humana correspondiente.
-4. **Cifras ancla:** 1.025 PQR; 216 lotes; 1.307 controles; lote VEG-BP-2026-047 con 64 reportes únicos de salud y controles de *Bacillus cereus* y alérgenos "No realizado"; 23 reportes que mencionan otros lotes sin respaldo; lotes 046 y 048 conformes.
-5. **Herramientas de referencia:** ChatGPT, Gemini, Claude, Grok, Perplexity, Artlist y ElevenLabs.
+2. **Problemática elegida:** Anthropic (Claude): fallas en la protección de la privacidad al permitir que conversaciones y documentos compartidos mediante enlaces públicos pudieran aparecer en buscadores, exponiendo información sensible.
+3. **Hechos públicos (con fuente):** sep-2025, Google indexó cerca de 600 conversaciones compartidas de Claude y las retiró; 25-jul-2026, un usuario de Reddit muestra que `site:claude.ai/share` devuelve chats; 26-jul-2026, también aparecen artefactos y los resultados empiezan a desaparecer; la prensa reporta llaves cripto, hojas de vida y documentos internos; robots.txt bloqueaba `/share/`, lo que impide leer el *noindex* pero no impide indexar una URL enlazada; Anthropic responde que no comparte directorios ni sitemaps y que lo compartido es público.
+4. **Herramientas de referencia:** ChatGPT, Gemini, Claude, Grok, Perplexity, Artlist y ElevenLabs.
 
 ### S — STEPS
-1. Definir crisis institucional con base académica (Coombs/SCCT, Fink, Mitroff), diferenciarla de incidente, problema y crisis de comunicación, y aplicarla al caso.
-2. Generar tres datasets simulados coherentes con las cifras ancla, con errores intencionales documentados, marcados como DATO SIMULADO y con el prompt de generación visible.
+1. Definir crisis institucional con base académica (Coombs/SCCT, Fink, Mitroff), diferenciarla de incidente, problema y crisis de comunicación, y aplicarla al caso (incluido el efecto del historial de crisis).
+2. Generar tres datasets simulados coherentes con los hechos públicos (enlaces públicos, menciones y soporte, serie KPI), con errores intencionales documentados, marcados como DATO SIMULADO y con el prompt de generación visible.
 3. Hacer el AED en 5 etapas (preguntas, caracterización, atípicos, limpieza, patrones) con código en Python, gráficos interpretados y una ficha única de hechos (Confirmado / Por confirmar / No consta).
-4. Describir cada fase con situación, objetivo, 5 pasos de la IA, herramienta, prompt de ejemplo, salida, decisión humana y riesgo ético evitado; integrar los 8 pasos de comunicación de crisis y los límites de la IA.
-5. Formular OKR previos, mostrar su afectación, reformularlos y construir un tablero de KPI con fórmula, fuente, frecuencia, responsable, base, crisis, meta y valor a 12 meses.
+4. Describir cada fase con situación, objetivo, 5 pasos de la IA, herramienta, prompt de ejemplo, decisión humana y riesgo ético evitado; integrar los 8 pasos de comunicación de crisis y los límites de la IA.
+5. Formular OKR previos ilustrativos, mostrar su afectación, reformularlos y construir un tablero de KPI con fórmula, fuente, frecuencia, responsable, base, crisis, meta y proyección.
 
 ### E — EXPECTATION
-Documento académico en español con 5 secciones, conclusiones y referencias APA 7; datasets descargables y código reproducible; tablas y gráficos con fuente e interpretación; sin hechos inventados fuera del caso; checklist final de autorrevisión.
+Documento académico en español con 5 secciones, plan de acción, conclusiones y referencias APA 7; datasets descargables y código reproducible; tablas y gráficos con fuente e interpretación; sin atribuirle a Anthropic métricas o hechos que no sean públicos; checklist final de autorrevisión.
