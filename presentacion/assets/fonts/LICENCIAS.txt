@@ -1,0 +1,3 @@
+Fuentes con licencia SIL Open Font License 1.1 (uso libre, incluida la redistribución):
+Anton (Vernon Adams), Fraunces (Undercase Type), Inter (Rasmus Andersson).
+Obtenidas de los paquetes @fontsource.
