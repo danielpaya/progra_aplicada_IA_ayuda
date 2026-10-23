@@ -4,13 +4,13 @@ Propuesta a la Junta Directiva de Alimenta Familia · 43 diapositivas · ≈ 18�
 
 **Cómo leer este guion:** cada **[→]** indica que hay que pulsar → para revelar el siguiente elemento antes de seguir hablando.
 
-Hilo: **el problema** (Camilo) → **el diagnóstico** (Daniel) → **la solución** (Laura) → **las acciones** (Mateo) → **los resultados y la decisión** (Valerie).
+Hilo: **el problema** (Camilo) → **el diagnóstico** (Daniel) → **la solución** (Laura) → **las acciones** (Mateo) → **los resultados y la decisión** (Valery).
 
 
 ## Camilo · El problema
 
 **1. Portada**  
-Buenas. Soy Camilo y con Daniel, Laura, Mateo y Valerie venimos a proponerle a la Junta cómo recuperar la confianza en Alimenta Familia. Miren el centro: un solo lote. Las ondas son lo que pasó después: la desconfianza salió del lote y llegó a toda la empresa.
+Buenas. Soy Camilo y con Daniel, Laura, Mateo y Valery venimos a proponerle a la Junta cómo recuperar la confianza en Alimenta Familia. Miren el centro: un solo lote. Las ondas son lo que pasó después: la desconfianza salió del lote y llegó a toda la empresa.
 
 **2. La pregunta**  
 Empiezo con una pregunta: ¿cuánto cuesta perder la confianza de una familia? Les vamos a dar la cifra.
@@ -124,13 +124,13 @@ Así se ve en el tiempo. En 30 días cerramos la causa raíz. En 60, los distrib
 Y ya lo probamos. En agosto llegó otro reporte. La IA ubicó el lote, confirmó sus seis controles y siguió el producto de la planta a la tienda. La compra fue después de la recepción: el lote estaba bien. Y la empresa lo comunicó igual.
 
 **36. 72 h → 6 h**  
-Rastrear un lote pasaba de 72 horas a 6. La meta es 4. Eso significa retirar un lote y no una línea completa. Valerie les muestra los resultados.
+Rastrear un lote pasaba de 72 horas a 6. La meta es 4. Eso significa retirar un lote y no una línea completa. Valery les muestra los resultados.
 
 
-## Valerie · Resultados y cierre
+## Valery · Resultados y cierre
 
 **37. Sección · Resultados**  
-Soy Valerie. Les muestro qué gana Alimenta Familia.
+Soy Valery. Les muestro qué gana Alimenta Familia.
 
 **38. Nuevos OKR**  
 Proponemos cambiar lo que mide la Junta. Los OKR de antes medían crecimiento y promedios. [→] Los nuevos miden confianza que se puede verificar: mensajes auditados, controles lote por lote, respuesta en menos de 12 horas y más hechos que promesas.

@@ -277,7 +277,7 @@ def leeme(prompt, errores):
 
 with pd.ExcelWriter(f"{OUT}/01_Registro_PQR_y_Reclamos_Alimenta_Familia.xlsx") as w:
     leeme(PROMPT_PQR, "25 duplicados exactos; 12 ciudades vacías; 8 canales vacíos; 10 lotes 'N/D'; 6 fechas imposibles; "
-                      "7 tiempos de respuesta negativos; 5 severidades = 9 (escala 1-5).").to_excel(w, sheet_name="LEEME", index=False)
+                      "7 tiempos de respuesta negativos; 5 severidades = 9 (escala 1-5). La columna fecha se guarda como texto a propósito, para conservar las fechas imposibles (p. ej. 2026-13-02).").to_excel(w, sheet_name="LEEME", index=False)
     df_pqr.to_excel(w, sheet_name="PQR", index=False)
 with pd.ExcelWriter(f"{OUT}/02_Trazabilidad_de_Lotes_y_Controles_de_Calidad.xlsx") as w:
     leeme(PROMPT_TRZ, "11 controles duplicados; 9 resultados vacíos; 5 fechas de control anteriores a la producción; "

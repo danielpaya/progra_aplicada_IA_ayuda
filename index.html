@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alimenta Familia · Propuesta a la Junta</title>
-<link rel="stylesheet" href="presentacion/assets/styles.css">
+<link rel="stylesheet" href="presentacion/assets/styles.css?v=5">
 </head>
 <body>
 <!-- Recursos SVG compartidos: tramas de semitono, brillo e iconos de collage -->
@@ -45,9 +45,9 @@
     <p class="say" data-a="up" data-d="350" style="color:#F2EBDC;margin-top:14px"><em>con hechos que se puedan verificar.</em></p>
   </div>
   <div class="team" data-a="up" data-d="700" style="position:relative;z-index:3">
-    <span class="lead" style="--c:var(--red)">Camilo</span><span style="--c:#E8DFCB">Daniel</span><span style="--c:var(--blue)">Laura</span><span style="--c:var(--mustard)">Mateo</span><span style="--c:var(--green)">Valerie</span>
+    <span class="lead" style="--c:var(--red)">Camilo</span><span style="--c:#E8DFCB">Daniel</span><span style="--c:var(--blue)">Laura</span><span style="--c:var(--mustard)">Mateo</span><span style="--c:var(--green)">Valery</span>
   </div>
-  <aside class="notes">Buenas. Soy Camilo y con Daniel, Laura, Mateo y Valerie venimos a proponerle a la Junta cómo recuperar la confianza en Alimenta Familia. Miren el centro: un solo lote. Las ondas son lo que pasó después: la desconfianza salió del lote y llegó a toda la empresa.</aside>
+  <aside class="notes">Buenas. Soy Camilo y con Daniel, Laura, Mateo y Valery venimos a proponerle a la Junta cómo recuperar la confianza en Alimenta Familia. Miren el centro: un solo lote. Las ondas son lo que pasó después: la desconfianza salió del lote y llegó a toda la empresa.</aside>
 </section>
 
 <section class="slide" data-speaker="Camilo" data-title="La pregunta">
@@ -60,7 +60,7 @@
 </section>
 
 <section class="slide t-red" data-speaker="Camilo" data-title="Ventas perdidas">
-  <div class="kicker" style="color:#fff" data-a="up">Ventas perdidas · línea vegana · abril a septiembre</div>
+  <div class="kicker" style="color:#fff" data-a="up">Ventas perdidas · línea vegana · abril a septiembre · frente al nivel de marzo</div>
   <div class="fill">
     <div class="row" style="align-items:flex-end;gap:26px">
       <span class="hero s1" data-count-lost data-a="up" data-d="150">0</span>
@@ -219,8 +219,15 @@
         <path d="M100 46 V54 M158 104 H150 M100 162 V154 M42 104 H50" stroke-width="4"/>
         <path d="M129 53.8 L127 57.3 M150.2 75 L146.7 77 M150.2 133 L146.7 131 M129 154.2 L127 150.7 M71 154.2 L73 150.7 M49.8 133 L53.3 131 M49.8 75 L53.3 77 M71 53.8 L73 57.3" stroke-width="2.5"/>
       </g>
-      <g class="clock-hand hand-m"><line x1="100" y1="104" x2="100" y2="66" stroke="#151311" stroke-width="9" stroke-linecap="round"/></g>
-      <g class="clock-hand hand-s"><line x1="100" y1="118" x2="100" y2="52" stroke="#E03A1E" stroke-width="5" stroke-linecap="round"/><circle cx="100" cy="104" r="4" fill="#E03A1E"/></g>
+      <!-- Manecillas: giran con SVG nativo alrededor del eje (100,104), igual en cualquier navegador -->
+      <g>
+        <line x1="100" y1="104" x2="100" y2="66" stroke="#151311" stroke-width="9" stroke-linecap="round"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 100 104" to="360 100 104" dur="30s" repeatCount="indefinite"/>
+      </g>
+      <g>
+        <line x1="100" y1="118" x2="100" y2="52" stroke="#E03A1E" stroke-width="5" stroke-linecap="round"/>
+        <animateTransform attributeName="transform" type="rotate" calcMode="discrete" values="0 100 104;6 100 104;12 100 104;18 100 104;24 100 104;30 100 104;36 100 104;42 100 104;48 100 104;54 100 104;60 100 104;66 100 104;72 100 104;78 100 104;84 100 104;90 100 104;96 100 104;102 100 104;108 100 104;114 100 104;120 100 104;126 100 104;132 100 104;138 100 104;144 100 104;150 100 104;156 100 104;162 100 104;168 100 104;174 100 104;180 100 104;186 100 104;192 100 104;198 100 104;204 100 104;210 100 104;216 100 104;222 100 104;228 100 104;234 100 104;240 100 104;246 100 104;252 100 104;258 100 104;264 100 104;270 100 104;276 100 104;282 100 104;288 100 104;294 100 104;300 100 104;306 100 104;312 100 104;318 100 104;324 100 104;330 100 104;336 100 104;342 100 104;348 100 104;354 100 104;360 100 104" dur="6s" repeatCount="indefinite"/>
+      </g>
       <circle cx="100" cy="104" r="8" fill="#151311"/><circle cx="100" cy="104" r="3" fill="#E03A1E"/>
     </svg>
     <div>
@@ -326,7 +333,7 @@
   <div class="fill">
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px">
       <div class="phase" data-a="up" data-d="300"><span class="n">1</span><span class="t">Escuchar</span><span class="lbl" style="font-size:16px">noche 1</span><span class="ia">Arma la ficha</span><span class="hu">Calidad firma</span></div>
-      <div class="phase" data-a="up" data-d="450"><span class="n">2</span><span class="t">Revisar</span><span class="lbl" style="font-size:16px">día 2</span><span class="ia">Contrasta frases</span><span class="hu">Jurídica aprueba</span></div>
+      <div class="phase" data-a="up" data-d="450"><span class="n">2</span><span class="t">Diagnosticar</span><span class="lbl" style="font-size:16px">día 2</span><span class="ia">Contrasta frases</span><span class="hu">Jurídica aprueba</span></div>
       <div class="phase" data-a="up" data-d="600"><span class="n">3</span><span class="t">Informar</span><span class="lbl" style="font-size:16px">semana 3</span><span class="ia">Rastrea el rumor</span><span class="hu">Vocera da la cara</span></div>
       <div class="phase" data-a="up" data-d="750"><span class="n">4</span><span class="t">Dialogar</span><span class="lbl" style="font-size:16px">mes 2</span><span class="ia">Hecho vs. promesa</span><span class="hu">Solo lo hecho</span></div>
       <div class="phase" data-a="up" data-d="900"><span class="n">5</span><span class="t">Actuar</span><span class="lbl" style="font-size:16px">mes 4</span><span class="ia">Rastrea en horas</span><span class="hu">Se comunica igual</span></div>
@@ -469,19 +476,19 @@
       <svg viewBox="0 0 160 60" style="width:180px" aria-hidden="true"><path d="M5 34 C 50 10, 90 56, 140 30" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" pathLength="1" data-a="draw" data-d="600"/><path d="M126 16 L148 29 L128 44" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" data-a="fade" data-d="1500"/></svg>
       <span class="hero s1" data-a="pop" data-d="1300"><span data-count="6" data-from="72" data-dur="1400">72</span> h</span>
     </div>
-    <p class="say mt2" data-a="up" data-d="1800" style="color:#fff">Meta del día 90: <b>4 horas</b>. Retirar un lote, no una línea entera. Valerie les muestra los resultados.</p>
+    <p class="say mt2" data-a="up" data-d="1800" style="color:#fff">Meta del día 90: <b>4 horas</b>. Retirar un lote, no una línea entera. Valery les muestra los resultados.</p>
   </div>
-  <aside class="notes">Rastrear un lote pasaba de 72 horas a 6. La meta es 4. Eso significa retirar un lote y no una línea completa. Valerie les muestra los resultados.</aside>
+  <aside class="notes">Rastrear un lote pasaba de 72 horas a 6. La meta es 4. Eso significa retirar un lote y no una línea completa. Valery les muestra los resultados.</aside>
 </section>
 
 <!-- ================================================================ VALERIE · RESULTADOS -->
-<section class="slide divider" data-speaker="Valerie" data-title="Sección · Resultados" style="--c:var(--green);color:#fff">
+<section class="slide divider" data-speaker="Valery" data-title="Sección · Resultados" style="--c:var(--green);color:#fff">
   <div class="curtain"></div><div class="num">05</div>
-  <div class="inner"><div class="role" data-a="up" data-d="350" style="color:#F2B705">05 · Los resultados</div><div class="ransom" data-ransom data-a="pop" data-d="450">Valerie</div><p class="q" data-a="up" data-d="800">Qué gana Alimenta Familia</p></div>
-  <aside class="notes">Soy Valerie. Les muestro qué gana Alimenta Familia.</aside>
+  <div class="inner"><div class="role" data-a="up" data-d="350" style="color:#F2B705">05 · Los resultados</div><div class="ransom" data-ransom data-a="pop" data-d="450">Valery</div><p class="q" data-a="up" data-d="800">Qué gana Alimenta Familia</p></div>
+  <aside class="notes">Soy Valery. Les muestro qué gana Alimenta Familia.</aside>
 </section>
 
-<section class="slide" data-speaker="Valerie" data-title="Nuevos OKR" data-steps="1">
+<section class="slide" data-speaker="Valery" data-title="Nuevos OKR" data-steps="1">
   <div class="kicker c-green" data-a="up">OKR de la Junta</div>
   <h2 class="hl md" data-a="up" data-d="100">Dejamos de medir promedios</h2>
   <div class="fill">
@@ -504,21 +511,21 @@
   <aside class="notes">Proponemos cambiar lo que mide la Junta. Los OKR de antes medían crecimiento y promedios. [→] Los nuevos miden confianza que se puede verificar: mensajes auditados, controles lote por lote, respuesta en menos de 12 horas y más hechos que promesas.</aside>
 </section>
 
-<section class="slide" data-speaker="Valerie" data-title="La confianza vuelve">
+<section class="slide" data-speaker="Valery" data-title="La confianza vuelve">
   <div class="kicker c-green" data-a="up">Índice de confianza · real hasta septiembre, luego proyección</div>
   <h2 class="hl md" data-a="up" data-d="100">La confianza vuelve: 38 → 61 → 75</h2>
   <div class="fill"><svg class="chart" data-chart="confianza" style="height:420px"></svg></div>
   <aside class="notes">El indicador central: la confianza tocó fondo en 38, hoy va en 61 y con el plan proyectamos 75 en marzo de 2027, la meta.</aside>
 </section>
 
-<section class="slide" data-speaker="Valerie" data-title="La operación responde">
+<section class="slide" data-speaker="Valery" data-title="La operación responde">
   <div class="kicker c-green" data-a="up">Avance frente a la meta · septiembre 2026</div>
   <h2 class="hl md" data-a="up" data-d="100">La operación ya responde</h2>
   <div class="fill"><div data-progress style="display:flex;flex-direction:column;gap:30px"></div></div>
   <aside class="notes">Lo que depende de nosotros ya mejoró: rastreamos un lote en 6 horas, respondemos en 17 y auditamos el 100 % de los mensajes. Lo que depende del público, como el NPS, avanza más lento.</aside>
 </section>
 
-<section class="slide" data-speaker="Valerie" data-title="El retorno">
+<section class="slide" data-speaker="Valery" data-title="El retorno">
   <div class="split r">
     <svg class="chart" data-chart="ventas" style="height:500px"></svg>
     <div>
@@ -530,7 +537,7 @@
   <aside class="notes">Y el negocio. Las ventas de la línea vegana van en 265 millones al mes. Con el plan proyectamos 430 en marzo: 165 millones más cada mes, y de vuelta al nivel previo a la crisis.</aside>
 </section>
 
-<section class="slide" data-speaker="Valerie" data-title="Las tres decisiones" data-steps="3">
+<section class="slide" data-speaker="Valery" data-title="Las tres decisiones" data-steps="3">
   <div class="kicker c-green" data-a="up">Lo que le pedimos hoy a la Junta</div>
   <h2 class="hl md" data-a="up" data-d="100">Tres decisiones</h2>
   <div class="fill">
@@ -543,7 +550,7 @@
   <aside class="notes">Para cerrar, le pedimos a la Junta tres decisiones. [→] Aprobar esta semana el bloqueo de liberación. [→] Nombrar un dueño de la ficha de hechos. [→] Y financiar la trazabilidad para rastrear cualquier lote en cuatro horas.</aside>
 </section>
 
-<section class="slide cover" data-speaker="Valerie" data-title="Cierre">
+<section class="slide cover" data-speaker="Valery" data-title="Cierre">
   <svg class="waves green" viewBox="-410 -410 820 820" aria-hidden="true">
     <circle r="380" fill="url(#glowGreen)"/>
     <circle class="ring" r="120"/><circle class="ring" r="200"/><circle class="ring" r="280"/><circle class="ring" r="360"/>
@@ -669,13 +676,13 @@
 <div id="help"><div class="box">
   <b>Atajos</b><br>
   <kbd>→</kbd> <kbd>Espacio</kbd> avanza (primero revela los pasos de la diapositiva) · <kbd>←</kbd> retrocede<br>
-  <kbd>1</kbd> Camilo · <kbd>2</kbd> Daniel · <kbd>3</kbd> Laura · <kbd>4</kbd> Mateo · <kbd>5</kbd> Valerie<br>
+  <kbd>1</kbd> Camilo · <kbd>2</kbd> Daniel · <kbd>3</kbd> Laura · <kbd>4</kbd> Mateo · <kbd>5</kbd> Valery<br>
   <kbd>D</kbd> mostrar u ocultar el anexo de datos simulados<br>
   <kbd>N</kbd> notas · <kbd>O</kbd> vista general · <kbd>F</kbd> pantalla completa · <kbd>L</kbd> tema noche<br>
   <kbd>T</kbd> cronómetro · <kbd>R</kbd> reiniciar · <kbd>Inicio</kbd>/<kbd>Fin</kbd>
 </div></div>
 
-<script src="presentacion/assets/data.js"></script>
-<script src="presentacion/assets/app.js"></script>
+<script src="presentacion/assets/data.js?v=5"></script>
+<script src="presentacion/assets/app.js?v=5"></script>
 </body>
 </html>

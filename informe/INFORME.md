@@ -1,8 +1,13 @@
 ---
 title: "Taller: Crisis Organizacional y cómo la IA ayuda"
-subtitle: "Caso Alimenta Familia S.A.S. · Universidad de La Sabana"
-author: "Daniel · Laura · Mateo · Camilo · Valerie"
-date: "Octubre de 2026"
+subtitle: "Caso Alimenta Familia S.A.S. · Programación aplicada · Universidad de La Sabana"
+author:
+  - Camilo Andres Alvarez Penate
+  - Valery Andrea Gomez Torres
+  - Mateo Laguna Sanchez
+  - Laura Sofia Noy Nino
+  - Daniel Felipe Pallares Kelin
+date: "Docente: Julian Obando Scarpetta · 23 de octubre de 2026"
 lang: es
 ---
 
@@ -12,11 +17,11 @@ Alimenta Familia no enfrenta un problema de producto sino de credibilidad: un so
 
 **Advertencia:** todos los datos numéricos de este documento son **DATOS SIMULADOS con fines académicos**, generados con IA a partir de las cifras ancla del caso (1.025 PQR, 216 lotes, 1.307 controles, 64 reportes del lote 047). No describen un incidente real verificado. Lo que el caso no informa se marca como «No consta».
 
-**Archivos complementarios:** carpeta `datos/` (3 libros Excel), `src/gen_datos.py`, `src/aed_alimenta_familia.py` y `resultados/figuras/`.
+**Archivos complementarios:** carpeta `datos/` (3 libros Excel), `src/gen_datos.py`, `src/aed_alimenta_familia.py`, `resultados/figuras/` y la bitácora de uso de IA en `docs/USO_DE_IA.md`.
 
 # 1. Definición de crisis institucional
 
-Una **crisis institucional** es un evento inesperado que amenaza las expectativas de los grupos de interés sobre la organización, afecta seriamente su desempeño y genera consecuencias negativas que ponen en duda su legitimidad y su capacidad de cumplir lo que promete (Coombs, 2007; Coombs, 2019). No es solo un daño operativo: es una ruptura de la confianza en la institución como fuente de información y de conducta.
+Una **crisis institucional** es un evento inesperado que amenaza las expectativas de los grupos de interés sobre la organización, afecta seriamente su desempeño y genera consecuencias negativas que ponen en duda su legitimidad y su capacidad de cumplir lo que promete (Coombs, 2007; Coombs, 2019). No es solo un daño operativo: es una ruptura de la confianza en la institución como fuente de información y de conducta. Mitroff (2005) añade que las organizaciones que salen fortalecidas de una crisis son las que la tratan como una falla del sistema que deben corregir, no como un accidente aislado.
 
 ## Qué la diferencia de otros conceptos
 
@@ -41,7 +46,7 @@ Una **crisis institucional** es un evento inesperado que amenaza las expectativa
 | --- | --- | --- |
 | Consumidores afectados | Salud, atención y reparación | Atención al Consumidor |
 | Consumidores de todas las líneas | Seguridad, etiquetado y confianza | Comunicación |
-| Autoridades sanitarias (INVIMA) | Evidencia técnica y trazabilidad | Calidad + Legal/Regulatorio |
+| Autoridades sanitarias (en Colombia, el INVIMA) | Evidencia técnica y trazabilidad | Calidad + Legal/Regulatorio |
 | Distribuidores y comercios | Instrucciones de retiro y actualizaciones | Operaciones |
 | Colaboradores | Protocolos y mensajes consistentes | Dirección + Comunicación |
 | Productores y proveedores | Responsabilidades y continuidad | Operaciones |
@@ -51,6 +56,10 @@ Una **crisis institucional** es un evento inesperado que amenaza las expectativa
 # 2. Datos ficticios generados con IA
 
 La IA generó tres datasets coherentes con las cifras ancla del caso. Llevan errores intencionales para que el análisis tenga algo que depurar, igual que los datos reales de una crisis. Todo está marcado como **DATO SIMULADO** y la hoja `LEEME` de cada libro documenta el prompt usado y los errores sembrados.
+
+**Cómo intervino la IA.** A partir de un prompt estructurado con el paradigma RISE (`docs/prompt_RISE.md`), la IA escribió el código que genera los datos (`src/gen_datos.py`) respetando las cifras del caso. El equipo verificó que las cifras cuadraran con el caso y que no se violaran sus restricciones. El registro completo de qué hizo la IA y qué revisó el equipo está en `docs/USO_DE_IA.md`.
+
+**Alcance de los datos.** Las PQR y la trazabilidad se usan para el diagnóstico (sección 3). La serie de KPI es un escenario diseñado, coherente con el caso; no se calcula a partir de las PQR, y desde octubre de 2026 es una proyección. El control de alérgenos (trazas de leche y huevo) es un control de contaminación cruzada, habitual porque la compañía también procesa lácteos. No se afirma que el producto contenga ingredientes de origen animal.
 
 | Dataset | Registros brutos | Contenido | Errores intencionales |
 | --- | --- | --- | --- |
@@ -80,6 +89,8 @@ El código que los reproduce (`src/gen_datos.py`, semilla 2026) permite regenera
 El AED confirma que el problema técnico está en un solo lote y la desconfianza en todo el portafolio. El lote VEG-BP-2026-047 concentra 64 de los 102 reportes de salud (63 %), sus dos controles críticos no se hicieron, y aun así las consultas de seguridad llegaron desde las cuatro líneas de producto.
 
 ## 3.1 Preguntas correctas
+
+Siguiendo a Tukey (1977), el análisis parte de preguntas y deja que los datos sugieran patrones antes de confirmar cualquier hipótesis.
 
 1. **P1.** ¿Los reportes de salud se concentran en un lote o se distribuyen en el portafolio?
 2. **P2.** ¿Qué controles se omitieron y en qué planta y turno ocurre con más frecuencia?
@@ -162,6 +173,8 @@ En cada fase la IA ordena, verifica y ensaya, y una persona decide qué se dice 
 
 ## 4.1 Detalle por fase
 
+Las fases 2 a 4 aplican las estrategias de reparación de imagen de Benoit (1997): reconocer, corregir y mostrar la acción correctiva, siempre con hechos verificados.
+
 | Fase | Situación | Objetivo | Los 5 pasos de la IA | Herramienta sugerida | Decisión humana | Riesgo que se evita |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1. Escuchar | El gerente quiere que una IA responda todo en redes ya | Fijar los hechos antes de hablar | Ingerir las 2 bases → depurar y reportar errores → cruzar PQR y controles por lote → clasificar (Confirmado / Por confirmar / No consta) → entregar la ficha y detenerse | ChatGPT (sintetizar), Grok (escuchar redes) | Calidad y Jurídica firman la ficha | Responder con datos sucios o inventados |
@@ -220,6 +233,8 @@ La lección de O3 es central: un promedio de 96,8 % parecía sano, pero no exig�
 
 ## 5.2 OKR reformulados después de la crisis
 
+Siguiendo a Doerr (2018), cada objetivo es cualitativo y cada resultado clave es medible y verificable.
+
 - **O1. Que cada público pueda comprobar que la información de Alimenta es veraz.**
     - KR1. 100 % de los mensajes públicos auditados contra la ficha de hechos antes de publicarse.
     - KR2. Relación hechos con evidencia / promesas ≥ 3 en los informes públicos.
@@ -252,6 +267,50 @@ La lección de O3 es central: un promedio de 96,8 % parecía sano, pero no exig�
 | Recompra (%) | clientes que repiten en 60 días / compradores | Panel de hogares | Mensual | Mercadeo | 42 | 19 | 34 | 41 | ≥ 42 |
 
 «Antes» es el promedio de oct-2025 a mar-2026 (en ventas, mar-2026, porque la línea se lanzó en febrero). Los tiempos de respuesta de esta serie son promedios mensuales; el AED reporta medianas, por eso difieren. Dos KPI nuevos, mensajes auditados y hechos/promesas, no existían antes: la crisis los creó.
+
+# 6. Plan de acción recomendado (90 días)
+
+Proponemos ocho acciones críticas: cinco victorias rápidas en los primeros 45 días y tres proyectos estratégicos al día 90. La primera ataca directamente la causa raíz encontrada en el análisis: ningún lote sale de planta sin sus seis controles.
+
+**Costo de no actuar.** Entre abril y septiembre de 2026, la línea vegana dejó de vender **1.560 MM COP** frente a su nivel de marzo (410 MM COP al mes). Marzo es el único mes completo antes de la crisis, porque la línea se lanzó en febrero; la cifra es un orden de magnitud sobre datos simulados.
+
+## 6.1 Ocho acciones críticas
+
+Los puntajes de impacto y esfuerzo (de 1 a 10) son criterio del equipo, no datos del caso.
+
+| # | Acción | Responsable | Indicador que mueve | Impacto | Esfuerzo | Tipo | Días |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Bloqueo de liberación: ningún lote sale sin 6/6 controles | Calidad | Controles por lote: 100 % | 9,6 | 1,8 | Victoria rápida | 0–10 |
+| 2 | Ficha única de hechos + auditoría con IA de cada mensaje | Comunicación y Jurídica | Mensajes auditados: 100 % | 9,0 | 2,6 | Victoria rápida | 0–14 |
+| 3 | Atención humana a afectados, priorizada con IA | Atención al Consumidor | Respuesta ≤ 12 h | 8,2 | 4,2 | Victoria rápida | 0–30 |
+| 4 | Auditoría y capacitación del turno noche, Planta Chía | Operaciones | Omisión por turno: 0 % | 8,0 | 3,4 | Victoria rápida | 7–45 |
+| 5 | Escucha social y protocolo contra rumores | Comunicación | Sentimiento neto > 0 | 6,2 | 3,0 | Victoria rápida | 14–40 |
+| 6 | Kit de evidencia por lote para distribuidores | Comercial | Distribuidores ≥ 95 % | 7,4 | 5,6 | Estratégico | 30–60 |
+| 7 | Trazabilidad lote → tienda | Operaciones y TI | Rastreo ≤ 4 h | 8,8 | 7,6 | Estratégico | 20–80 |
+| 8 | Verificación universitaria + informe de hechos | Dirección | Hechos/promesas ≥ 3 | 7,8 | 6,6 | Estratégico | 45–90 |
+
+## 6.2 Hoja de ruta
+
+- **Día 30:** ningún lote sale incompleto, la ficha de hechos opera y los afectados reciben respuesta en menos de 12 horas.
+- **Día 60:** el turno noche está auditado y capacitado, y los distribuidores tienen evidencia por lote para volver a vender.
+- **Día 90:** cualquier lote se rastrea en 4 horas y se publica el primer informe de hechos verificado por una universidad.
+
+## 6.3 Retorno esperado (proyección simulada)
+
+| Indicador | Sep-2026 | Mar-2027 (proyección) | Cambio |
+| --- | --- | --- | --- |
+| Ventas de la línea vegana (MM COP/mes) | 265 | 430 | +165 |
+| Distribuidores activos (%) | 85 | 96 | +11 p. p. |
+| Índice de confianza (0–100) | 61 | 75 | +14 |
+| Recompra (%) | 34 | 41 | +7 p. p. |
+
+Además, el plan reduce el riesgo legal de comunicar afirmaciones sin respaldo y permite retirar un lote en lugar de una línea completa.
+
+## 6.4 Decisiones que se le piden a la Junta
+
+1. Aprobar esta semana el bloqueo de liberación (acción 1).
+2. Nombrar un dueño de la ficha única de hechos, con firma de Calidad y Jurídica (acción 2).
+3. Financiar la trazabilidad lote → tienda para rastrear cualquier lote en 4 horas (acción 7).
 
 # Conclusiones y lecciones aprendidas
 

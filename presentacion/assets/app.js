@@ -7,9 +7,9 @@
   const deck = document.getElementById('deck');
   const ALL = [...deck.querySelectorAll('.slide')];
   const D = window.DATA, K = D.kpi;
-  const ORDER = ['Camilo', 'Daniel', 'Laura', 'Mateo', 'Valerie'];
-  const COLOR = { Camilo: 'var(--red)', Daniel: '#E8DFCB', Laura: 'var(--blue)', Mateo: 'var(--mustard)', Valerie: 'var(--green)', Equipo: 'var(--blue)' };
-  const BAR = { Camilo: '#E03A1E', Daniel: '#E03A1E', Laura: '#2442C9', Mateo: '#F2B705', Valerie: '#2E7D4F', Equipo: '#2442C9' };
+  const ORDER = ['Camilo', 'Daniel', 'Laura', 'Mateo', 'Valery'];
+  const COLOR = { Camilo: 'var(--red)', Daniel: '#E8DFCB', Laura: 'var(--blue)', Mateo: 'var(--mustard)', Valery: 'var(--green)', Equipo: 'var(--blue)' };
+  const BAR = { Camilo: '#E03A1E', Daniel: '#E03A1E', Laura: '#2442C9', Mateo: '#F2B705', Valery: '#2E7D4F', Equipo: '#2442C9' };
   const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } } };
 
   // ---------- utilidades ----------

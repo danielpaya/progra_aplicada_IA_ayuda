@@ -30,7 +30,7 @@ Presentación auditada: versión «tablero» de 17 diapositivas. Resultado: vers
 | Mostaza | `#F2B705` | Solo decisión humana y acciones |
 | Azul riso | `#2442C9` | Solo la IA |
 
-Cada sección tiene su color dominante: Camilo en rojo, Daniel en tinta y rojo, Laura en azul, Mateo en mostaza y Valerie en verde. La barra de progreso cambia de color con la sección.
+Cada sección tiene su color dominante: Camilo en rojo, Daniel en tinta y rojo, Laura en azul, Mateo en mostaza y Valery en verde. La barra de progreso cambia de color con la sección.
 
 **Tipografía.**
 - Titulares: Anton (respaldo: Impact), en mayúsculas y condensada.
@@ -93,13 +93,13 @@ Cada sección tiene su color dominante: Camilo en rojo, Daniel en tinta y rojo, 
 | 34 | Mateo | Comprometer | Cada acción tiene fecha y dueño | Gantt que crece | 20 |
 | 35 | Mateo | Probar | Un nuevo reporte, resuelto en horas | Ruta con camión animado | 25 |
 | 36 | Mateo | Probar | 72 h → 6 h | Contador regresivo sobre verde | 15 |
-| 37 | Valerie | Sección | 05 · Los resultados | Cortina verde | 5 |
-| 38 | Valerie | Cambiar | Dejamos de medir promedios | OKR tachados → OKR nuevos | 25 |
-| 39 | Valerie | Mostrar | La confianza vuelve: 38 → 61 → 75 | Línea que se dibuja y proyección | 20 |
-| 40 | Valerie | Mostrar | La operación ya responde | 4 barras frente a la meta | 20 |
-| 41 | Valerie | Retorno | +165 millones al mes | Ventas que crecen hasta mar-27 | 20 |
-| 42 | Valerie | Pedir | Tres decisiones | 3 recortes · 3 pasos | 30 |
-| 43 | Valerie | Cerrar | Confianza = mensaje + evidencia + consistencia + acción | Ondas verdes desde «Hechos» | 20 |
+| 37 | Valery | Sección | 05 · Los resultados | Cortina verde | 5 |
+| 38 | Valery | Cambiar | Dejamos de medir promedios | OKR tachados → OKR nuevos | 25 |
+| 39 | Valery | Mostrar | La confianza vuelve: 38 → 61 → 75 | Línea que se dibuja y proyección | 20 |
+| 40 | Valery | Mostrar | La operación ya responde | 4 barras frente a la meta | 20 |
+| 41 | Valery | Retorno | +165 millones al mes | Ventas que crecen hasta mar-27 | 20 |
+| 42 | Valery | Pedir | Tres decisiones | 3 recortes · 3 pasos | 30 |
+| 43 | Valery | Cerrar | Confianza = mensaje + evidencia + consistencia + acción | Ondas verdes desde «Hechos» | 20 |
 
 **Anexo** (oculto; se activa con el botón de la diapositiva de cierre, el botón «Datos» o la tecla D; sin expositor asignado):
 
