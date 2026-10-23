@@ -258,6 +258,12 @@ body.show-hud .slide.has-steps .build-hint{opacity:.8}
 /* animaciones continuas pequeñas */
 .slide.active .spin{animation:spin 6s linear infinite;transform-box:fill-box;transform-origin:center}
 .slide.active .spin.fast{animation-duration:1.4s}
+/* reloj: las manecillas giran sobre el eje del reloj (100,104), no sobre su propio centro */
+.clock-hand{transform-box:view-box;transform-origin:100px 104px}
+.slide.active .hand-s{animation:spin 6s steps(60) infinite}
+.slide.active .hand-m{animation:spin 30s linear infinite}
+.slide.active .crown{animation:crown 1s ease-in-out infinite}
+@keyframes crown{0%,100%{transform:translateY(0)}12%{transform:translateY(4px)}30%{transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .slide.active .wobble{animation:wobble 3.2s ease-in-out infinite;transform-origin:center}
 @keyframes wobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
